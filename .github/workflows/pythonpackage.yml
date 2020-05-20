@@ -25,6 +25,7 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
       run: |
+        sudo apt-get update
         sudo apt-get install libsdl1.2-dev python-pygame python-pygame-sdl2
         python -m pip install --upgrade pip
         pip install flake8 pytest
