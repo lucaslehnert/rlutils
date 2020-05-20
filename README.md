@@ -11,7 +11,7 @@ If you have any questions about rlutils, please send email to `lucas_lehnert@bro
 
 ## Installation
 
-rlutils is tested on python 3.6 and 3.7.
+rlutils is tested on python 3.5, 3.6, 3.7, and 3.8.
 
 This package can be installed by cloning this repository and then installing it using pip:
 
