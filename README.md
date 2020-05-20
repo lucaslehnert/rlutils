@@ -1,3 +1,6 @@
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+![pytest](https://github.com/lucaslehnert/rlutils/workflows/pytest/badge.svg)
+
 # rlutils: A utility package for implementing reinforcement learning simulations.
 
 rlutils is a python package containing utility functions to implement reinforcement learning simulations. 
