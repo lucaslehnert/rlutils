@@ -74,6 +74,9 @@ class QLearning(Agent):
         self._q[action] = self._q[action] + self._lr * td_error * state
         return {'td_error': td_error}
 
+    def on_simulation_timeout(self):
+        pass
+
     def get_q_vector(self):
         """
 

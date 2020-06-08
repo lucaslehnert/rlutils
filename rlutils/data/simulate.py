@@ -42,7 +42,7 @@ def simulate(mdp, policy, transition_listener, max_steps=5000):
 
         i += 1
         if i >= max_steps and not done:
-            raise SimulationTimout('Timeout of %d steps hit.' % max_steps)
+            raise SimulationTimeout('Timeout of %d steps hit.' % max_steps)
 
 
 def simulate_gracefully(mdp, policy, transition_listener, max_steps=5000):
@@ -57,8 +57,8 @@ def simulate_gracefully(mdp, policy, transition_listener, max_steps=5000):
     """
     try:
         simulate(mdp, policy, transition_listener, max_steps=max_steps)
-    except SimulationTimout:
-        pass
+    except SimulationTimeout:
+        transition_listener.on_simulation_timeout()
 
 
 def replay_trajectory(trajectory, transition_listener):
@@ -77,7 +77,7 @@ def replay_trajectory(trajectory, transition_listener):
 
 
 
-class SimulationTimout(Exception):
+class SimulationTimeout(Exception):
     pass
 
 
@@ -95,6 +95,14 @@ class TransitionListener(ABC):
         """
         pass
 
+    @abstractmethod
+    def on_simulation_timeout(self): # pragma: no cover
+        """
+        This method is called when a SimulationTimout exception is raised while simulating a trajectory. This occurs
+        every time a trajectory finished in a state different than a terminal state.
+        """
+        pass
+
 
 class _TransitionListenerAggregator(TransitionListener):
     def __init__(self, *update_listener_list):
@@ -103,6 +111,10 @@ class _TransitionListenerAggregator(TransitionListener):
     def update_transition(self, s, a, r, s_next, t, info):
         for l in self._update_listener_list:
             l.update_transition(s, a, r, s_next, t, info)
+
+    def on_simulation_timeout(self):
+        for l in self._update_listener_list:
+            l.on_simulation_timeout()
 
 
 def transition_listener(*update_listener_list):

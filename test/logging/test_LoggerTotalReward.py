@@ -51,8 +51,8 @@ class TestLoggerTotalReward(TestCase):
             ])
             try:
                 rl.data.simulate(mdp, policy, logger, max_steps=10)
-            except rl.data.SimulationTimout:
-                logger.finish_episode()
+            except rl.data.SimulationTimeout:
+                logger.on_simulation_timeout()
         self.assertTrue(np.all(logger.get_total_reward_episodic() == np.ones(5) * -7.))
 
 

@@ -96,8 +96,8 @@ class TestLoggerTotalReward(TestCase):
                 policy = rl.policy.ActionSequencePolicy(act_seq)
                 try:
                     rl.data.simulate(mdp, policy, logger, max_steps=10)
-                except rl.data.SimulationTimout:
-                    logger.finish_episode()
+                except rl.data.SimulationTimeout:
+                    logger.on_simulation_timeout()
 
             for traj in logger.get_trajectory_list():
                 s, a, r, sn, t, _ = traj.all()

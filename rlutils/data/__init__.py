@@ -8,4 +8,4 @@ from .transition_buffer import TransitionBuffer, TransitionBufferFixedSize
 from .buffer_sampler import BufferSamplerUniform, BufferSamplerUniformSARST, BufferSamplerUniformSARS, BufferIterator, \
     BufferIteratorSARS, BufferIteratorSARST, BufferIteratorException
 from .simulate import simulate, simulate_gracefully, replay_trajectory, transition_listener
-from .simulate import TransitionListener, SimulationTimout
+from .simulate import TransitionListener, SimulationTimeout

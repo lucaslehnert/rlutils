@@ -15,11 +15,11 @@ class LoggerTrajectory(TransitionListener):
     def update_transition(self, s, a, r, s_next, t, info):
         self._curr_trajectory.update_transition(s, a, r, s_next, t, info)
         if t:
-            self.finish_trajectory()
+            self.on_simulation_timeout()
 
     def get_trajectory_list(self):
         return self._trajectory_list
 
-    def finish_trajectory(self):
+    def on_simulation_timeout(self):
         self._trajectory_list.append(self._curr_trajectory)
         self._curr_trajectory = TransitionBuffer()

@@ -90,6 +90,9 @@ class TransitionBuffer(TransitionListener):
         self._t_buffer.append(t)
         self._info_buffer.append(info)
 
+    def on_simulation_timeout(self):
+        pass
+
     def save(self, dir_name):
         os.makedirs(dir_name, exist_ok=True)
         np.save(osp.join(dir_name, 'buffer_s.npy'), self._s_buffer)

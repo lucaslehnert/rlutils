@@ -26,11 +26,6 @@ class LoggerTotalReward(TransitionListener):
     def get_total_reward_episodic(self):
         return np.array(self._total_reward_episodic)
 
-    def finish_episode(self):
-        '''
-        Call this if an episode times out or does not finish with a terminal flag.
-
-        :return:
-        '''
+    def on_simulation_timeout(self):
         self._total_reward_episodic.append(self._total_reward)
         self._total_reward = 0
