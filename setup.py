@@ -14,7 +14,7 @@ with open("requirements.txt", 'r') as fr:
 
 setuptools.setup(
     name="rlutils",
-    version="0.0.1",
+    version="0.0.2",
     author="The rlutils authors",
     author_email="lucas_lehnert@brown.edu",
     description="rlutils: A utility package for implementing reinforcement learning simulations.",
@@ -28,5 +28,5 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     install_requires=req_pgks_list,
-    python_requires='>=3.6'
+    python_requires='>=3.5'
 )
