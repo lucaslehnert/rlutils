@@ -30,6 +30,9 @@ class StateRepresentationWrapperAgent(Agent):
         """
         return self._agent
 
+    def on_simulation_timeout(self):
+        self._agent.on_simulation_timeout()
+
     def reset(self, *params, **kwargs):
         self._agent.reset(*params, **kwargs)
 

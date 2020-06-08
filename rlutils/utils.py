@@ -54,7 +54,7 @@ class Experiment(object):
         t_start = time.time()
         self._run_experiment()
         self._duration_sec = time.time() - t_start
-        print('{} finished, duration: {:0>8}'.format(self.get_classname(), str(timedelta(seconds=self._duration_sec))))
+        print('{} finished, duration: {:0>8}'.format(self.get_class_name(), str(timedelta(seconds=self._duration_sec))))
 
     @abstractmethod
     def _run_experiment(self):  # pragma: no cover
@@ -78,7 +78,7 @@ class Experiment(object):
         raise NotImplemented('load_experiment must be implemented by a subclass.')
 
     @classmethod
-    def get_classname(cls):  # pragma: no cover
+    def get_class_name(cls):  # pragma: no cover
         return cls.__name__
 
 

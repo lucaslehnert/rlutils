@@ -21,6 +21,7 @@ class TestPersistenceTrajectory(unittest.TestCase):
         while not buffer.full():
             rlutils.data.simulate_gracefully(env, policy, buffer)
         self.assertTrue(buffer.full())
+        buffer.on_simulation_timeout()
 
         dir_name = 'test_dir'
         buffer.save(dir_name)

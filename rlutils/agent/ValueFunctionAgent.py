@@ -32,3 +32,6 @@ class ValueFunctionAgent(Agent):
 
     def update_transition(self, state, action, reward, next_state, term, info):
         pass
+
+    def on_simulation_timeout(self):
+        pass

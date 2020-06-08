@@ -73,6 +73,8 @@ class TestStateRepresentationWrapperAgent(TestCase):
         q_corr = np.stack([np.matmul(rep_mat, q_corr[a]) for a in range(2)])
         q_val_learned = np.stack([agent.q_values(rl.one_hot(i, 9)) for i in range(9)]).transpose()
         self.assertTrue(np.allclose(q_corr, q_val_learned))
+        agent.on_simulation_timeout()
+        self.assertTrue(np.allclose(q_corr, q_val_learned))
         agent.reset()
         q_val_learned = np.stack([agent.q_values(rl.one_hot(i, 9)) for i in range(9)]).transpose()
         self.assertTrue(np.all(q_val_learned == 0.1))

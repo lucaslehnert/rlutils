@@ -20,6 +20,8 @@ class TestValueFunctionAgent(TestCase):
         import numpy as np
         agent = rl.agent.ValueFunctionAgent(q_fun=lambda s: np.ones(3) * 0.4)
         self.assertTrue(np.all(agent.q_values(rl.one_hot(0, 2)) == 0.4))
+        agent.on_simulation_timeout()
+        self.assertTrue(np.all(agent.q_values(rl.one_hot(0, 2)) == 0.4))
 
     def test_update_transition(self):
         import rlutils as rl

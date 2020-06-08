@@ -33,6 +33,8 @@ class TestQLearning(TestCase):
         self.assertEqual(res['td_error'], .0 + .9 * .1 - .1)
         q_0 = np.array([.1 + .1 * (.0 + .9 * .1 - .1), .1])
         self.assertTrue(np.allclose(q_0, agent.q_values(rl.one_hot(0, 2))))
+        agent.on_simulation_timeout()
+        self.assertTrue(np.allclose(q_0, agent.q_values(rl.one_hot(0, 2))))
         q_1 = np.array([.1, .1])
         self.assertTrue(np.allclose(q_1, agent.q_values(rl.one_hot(1, 2))))
 

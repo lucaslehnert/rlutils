@@ -27,7 +27,6 @@ class TestSimulate(TestCase):
                 rl.environment.gridworld.GridWorldAction.DOWN
             ])
             rl.data.simulate_gracefully(mdp, policy, logger, max_steps=10)
-            logger.update_episode_length(10)
         self.assertTrue(np.all(logger.get_episode_length() == np.ones(5) * 10))
 
     def _traj_equal(self, traj_1, traj_2):
@@ -88,6 +87,19 @@ class TestSimulate(TestCase):
             rl.environment.gridworld.GridWorldAction.LEFT
         ])
         rl.data.simulate(mdp, policy, rl.data.transition_listener(logger_1, logger_2))
+        traj_1 = logger_1.get_trajectory_list()[0]
+        traj_2 = logger_2.get_trajectory_list()[0]
+
+        self._traj_equal(traj_1, traj_2)
+
+    def test_transition_listener_timeout(self):
+        import rlutils as rl
+        logger_1 = rl.logging.LoggerTrajectory()
+        logger_2 = rl.logging.LoggerTrajectory()
+
+        mdp = rl.environment.PuddleWorld(slip_prob=0.)
+        policy = rl.policy.ActionSequencePolicy([rl.environment.gridworld.GridWorldAction.UP] * 101)
+        rl.data.simulate_gracefully(mdp, policy, rl.data.transition_listener(logger_1, logger_2), max_steps=100)
         traj_1 = logger_1.get_trajectory_list()[0]
         traj_2 = logger_2.get_trajectory_list()[0]
 

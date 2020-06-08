@@ -51,8 +51,8 @@ class TestLoggerEpisodeLength(TestCase):
             ])
             try:
                 rl.data.simulate(mdp, policy, logger, max_steps=10)
-            except rl.data.SimulationTimout:
-                logger.finish_trajectory()
+            except rl.data.SimulationTimeout:
+                logger.on_simulation_timeout()
         self.assertTrue(np.all(logger.get_episode_length() == np.ones(5) * 10))
 
     def test_update_episode_length(self):
@@ -75,6 +75,6 @@ class TestLoggerEpisodeLength(TestCase):
             ])
             try:
                 rl.data.simulate(mdp, policy, logger, max_steps=10)
-            except rl.data.SimulationTimout:
+            except rl.data.SimulationTimeout:
                 logger.update_episode_length(10)
         self.assertTrue(np.all(logger.get_episode_length() == np.ones(5) * 10))

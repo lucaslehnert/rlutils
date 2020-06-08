@@ -21,7 +21,7 @@ class LoggerEpisodeLength(TransitionListener):
     def update_transition(self, s, a, r, s_next, t, info):
         self._curr_episode_steps += 1
         if t:
-            self.finish_trajectory()
+            self.on_simulation_timeout()
 
     def get_episode_length(self):
         return np.array(self._episode_length)
@@ -30,6 +30,6 @@ class LoggerEpisodeLength(TransitionListener):
         self._episode_length.append(episode_length)
         self._curr_episode_steps = 0
 
-    def finish_trajectory(self):
+    def on_simulation_timeout(self):
         self._episode_length.append(self._curr_episode_steps)
         self._curr_episode_steps = 0
