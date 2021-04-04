@@ -90,7 +90,7 @@ class QLearning(Agent):
         :return: Discount factor gamma.
         :rtype: float
         """
-        return self._gammarm 
+        return self._gamma
 
     def get_learning_rate(self):
         """
