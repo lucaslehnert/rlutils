@@ -10,3 +10,12 @@ from .gridworld_policy import gridworld_policy
 
 from .mean_with_sem import mean_with_sem
 from .mean_with_max_min import mean_with_max_min
+
+
+__all__ = [
+    "ColorMap",
+    "gridworld_state_action_map",
+    "gridworld_policy",
+    "mean_with_sem",
+    "mean_with_max_min"
+]

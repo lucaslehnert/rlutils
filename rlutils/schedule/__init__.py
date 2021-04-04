@@ -6,3 +6,6 @@
 
 from .VariableSchedule import VariableSchedule
 from .LinearInterpolatedVariableSchedule import LinearInterpolatedVariableSchedule
+
+
+__all__ = ["VariableSchedule", "LinearInterpolatedVariableSchedule"]

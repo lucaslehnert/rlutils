@@ -12,12 +12,11 @@ def simulate(mdp, policy, transition_listener, max_steps=5000):
     Train the agent on the given MDP for one episode.
 
     Episodes can terminate in two ways, either a terminal state is reached or the max_step count is reached. If a
-    terminal state is reached, then the info dictionary contains the key-pair
-        terminate_reason: terminal_state
+    terminal state is reached, then the info dictionary contains the key-pair terminate_reason: terminal_state
     If the episode is terminated due to the step count being reached, then the info dictionary contains the key-pair
-        terminate_reason: simulation_timeout. In this case, a rlutils.data.SimulationTimout exception is also thrown.
-        Please refer to rlutils.data.simulate_gracefully which does not throw a SimulationTimout exception but has the
-        same behaviour otherwise.
+    terminate_reason: simulation_timeout. In this case, a rlutils.data.SimulationTimout exception is also thrown.
+    Please refer to rlutils.data.simulate_gracefully which does not throw a SimulationTimout exception but has the
+    same behaviour otherwise.
     If the episode does not terminate, then the key 'terminate_reason' will not be added to the info dictionary.
 
     :param mdp: MDP

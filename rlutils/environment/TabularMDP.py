@@ -88,8 +88,7 @@ class TabularMDP(gym.Env):
     def save_to_file(self, meta_filename: str):
         '''
         Save MDP to file.
-        :param meta_filename: YAML file name used to save results. This YAML file only contains meta data and
-            references other files containing actual data.
+        :param meta_filename: YAML file name used to save results. This YAML file only contains meta data and references other files containing actual data.
         :return: None
         '''
         save_dir = osp.split(meta_filename)[0]
@@ -119,8 +118,7 @@ class TabularMDP(gym.Env):
     def load_from_file(self, meta_filename: str):
         '''
         Classmethod used to load MDP from a meta file.
-        :param meta_filename: YAML file name used to save results. This YAML file only contains meta data and
-            references other files containing actual data.
+        :param meta_filename: YAML file name used to save results. This YAML file only contains meta data and references other files containing actual data.
         :return: An instance of Experiment.
         '''
         with open(meta_filename, 'r') as f:

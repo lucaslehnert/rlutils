@@ -8,7 +8,14 @@ from rlutils.data import TransitionBuffer, TransitionListener
 
 
 class LoggerTrajectory(TransitionListener):
+    """Class used to log a trajectory.
+
+    :param TransitionListener: [description]
+    :type TransitionListener: [type]
+    """
     def __init__(self):
+        """Constructor.
+        """
         self._curr_trajectory = TransitionBuffer()
         self._trajectory_list = []
 

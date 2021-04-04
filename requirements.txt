@@ -5,3 +5,5 @@ pygame>=1.9.6
 PyYAML>=5.1
 colorlover>=0.3.0
 plotly>=4.4.1
+sphinx
+sphinx_rtd_theme

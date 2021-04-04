@@ -10,3 +10,13 @@ from .QLearning import QLearning
 from .StateRepresentationWrapperAgent import StateRepresentationWrapperAgent
 from .ZeroValueAgent import ZeroValueAgent, UniformActionSelectionAgent
 from .ValueFunctionAgent import ValueFunctionAgent
+
+__all__ = [
+    "Agent", 
+    "VIAgent",
+    "QLearning",
+    "StateRepresentationWrapperAgent",
+    "ZeroValueAgent",
+    "UniformActionSelectionAgent",
+    "ValueFunctionAgent"
+]
