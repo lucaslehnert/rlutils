@@ -20,7 +20,7 @@ class TabularMDP(gym.Env):
 
     def __init__(self, t_mat, r_mat, idx_start_list, idx_goal_list, name='TabularMDP'):
         num_states = np.shape(t_mat)[1]
-        term_state_mask = np.array([i in idx_goal_list for i in range(num_states)], dtype=np.bool)
+        term_state_mask = np.array([i in idx_goal_list for i in range(num_states)], dtype=bool)
         t_mat, r_mat = add_terminal_states(t_mat, r_mat, term_state_mask)
 
         self._t_mat = t_mat
