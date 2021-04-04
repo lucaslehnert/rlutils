@@ -9,8 +9,7 @@ Welcome to rlutils's documentation!
 rlutils is a python package containing utility functions to implement 
 reinforcement learning simulations.  The goal of rlutils is to provide a useful 
 base library to help implement reinforcement learning (RL) research projects.
-The `examples` directory contains jupyter notebooks demonstrating how to use 
-rlutils.
+This project can also be found at https://github.com/lucaslehnert/rlutils.
 
 rlutils provides an API to implement RL agents, policies, and simulate them in a
 control task (also called environment or Markov Decision Process (MDP)). rlutils
