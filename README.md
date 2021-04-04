@@ -43,13 +43,21 @@ pip install .
 ## Generating API Documentation
 
 The API documentation can be generated using Sphinx. To build the HTML 
-documentation, first install the following packages using pip:
+documentation on Ubuntu 20.04, first install the following packages using pip:
 
 ```
-pip install Sphinx==3.5.2 sphinx-rtd-theme==0.5.1
+sudo apt install pandoc
+pip install Sphinx==3.5.2 sphinx-rtd-theme==0.5.1 nbsphinx==0.8.2 pandoc
 ```
 
-The documentation can be build in `docs/build` by running
+To update the API docs with sphinx run the following:
+
+```
+cd docs
+sphinx-apidoc -o source .. ../setup.py ../test
+```
+
+The documentation can be build in `docs/build` by running the following:
 
 ```
 cd docs/

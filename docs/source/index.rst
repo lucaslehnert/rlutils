@@ -10,6 +10,8 @@ Welcome to rlutils's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   example_q_learning
+   example_value_iteration
    modules
 
 
