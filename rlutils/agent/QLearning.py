@@ -85,9 +85,10 @@ class QLearning(Agent):
         return np.array(self._q)
 
     def get_gamma(self):
-        """
+        """Discount factor getter
 
         :return: Discount factor gamma.
+        :rtype: float
         """
         return self._gamma
 

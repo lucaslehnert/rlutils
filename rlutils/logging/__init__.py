@@ -7,3 +7,6 @@
 from .LoggerEpisodeLength import LoggerEpisodeLength
 from .LoggerTotalReward import LoggerTotalReward
 from .LoggerTrajectory import LoggerTrajectory
+
+
+__all__ = ["LoggerEpisodeLength", "LoggerTotalReward", "LoggerTrajectory"]

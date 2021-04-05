@@ -5,7 +5,6 @@
 #
 
 import numpy as np
-
 from rlutils.data import TransitionListener
 
 
@@ -15,6 +14,8 @@ class LoggerEpisodeLength(TransitionListener):
     """
 
     def __init__(self):
+        """Constructor.
+        """
         self._curr_episode_steps = 0
         self._episode_length = []
 

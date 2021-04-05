@@ -11,8 +11,7 @@ class ActionTiledBasisFunction(object):
     """
     ActionTiledBasisFunction implements a tiled basis function for finite action spaces. Each state is represented as
     a vector v. All actions are indices ranging from 0 to num_actions - 1. The resulting basis function vector has a
-    length of len(v) * num_actions. For an a, the resulting tiled vector w will contain v at
-        w[a * num_actions:(a+1) * num_actions] = v
+    length of len(v) * num_actions. For an a, the resulting tiled vector w will contain v at w[a * num_actions:(a+1) * num_actions] = v
     and will be zero otherwise.
     """
     def __init__(self, state_dim, num_actions, dtype=np.float32):

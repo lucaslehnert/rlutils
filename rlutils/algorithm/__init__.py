@@ -5,3 +5,5 @@
 #
 
 from .vi import vi, VITimeoutException
+
+__all__ = ["vi", "VITimeoutException"]

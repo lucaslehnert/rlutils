@@ -46,7 +46,7 @@ def add_terminal_states(t_mat, r_mat, term_state_mask):
 
 def idx_to_pt(i, shape):
     w, h = shape
-    y = np.floor(i / w).astype(np.int)
+    y = np.floor(i / w).astype(np.int32)
     x = i - y * w
     return x, y
 

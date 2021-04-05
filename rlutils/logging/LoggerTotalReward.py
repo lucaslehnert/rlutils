@@ -14,6 +14,8 @@ class LoggerTotalReward(TransitionListener):
     """
 
     def __init__(self):
+        """Constructor.
+        """
         self._total_reward = 0
         self._total_reward_episodic = []
 
