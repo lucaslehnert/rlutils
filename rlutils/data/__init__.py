@@ -32,9 +32,7 @@ __all__ = [
     "BufferIteratorSARST",
     "BufferIteratorException",
     "simulate",
-    "simulate_gracefully",
     "replay_trajectory",
     "transition_listener",
-    "TransitionListener",
-    "SimulationTimeout"
+    "TransitionListener"
 ]

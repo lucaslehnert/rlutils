@@ -41,23 +41,8 @@ def simulate(mdp, policy, transition_listener, max_steps=5000):
 
         i += 1
         if i >= max_steps and not done:
-            raise SimulationTimeout('Timeout of %d steps hit.' % max_steps)
-
-
-def simulate_gracefully(mdp, policy, transition_listener, max_steps=5000):
-    """
-    Train the agent on the given MDP for one episode. This function cannot raise a SimulationTimout exception and
-    returns instead. No terminal flag is fed to the agent.
-
-    :param mdp: MDP
-    :param policy: Policy
-    :param update_callback: Update callback accepting (s, a, r, s_next, t, info).
-    :return: None
-    """
-    try:
-        simulate(mdp, policy, transition_listener, max_steps=max_steps)
-    except SimulationTimeout:
-        transition_listener.on_simulation_timeout()
+            transition_listener.on_simulation_timeout()
+            break
 
 
 def replay_trajectory(trajectory, transition_listener):
@@ -73,11 +58,6 @@ def replay_trajectory(trajectory, transition_listener):
     """
     for i, (s, a, r, s_next, done, info) in enumerate(zip(*trajectory.all())):
         transition_listener.update_transition(s, a, r, s_next, done, info)
-
-
-
-class SimulationTimeout(Exception):
-    pass
 
 
 class TransitionListener(ABC):
