@@ -23,7 +23,7 @@ RL algorithms.
 If you have any questions about rlutils, please send email to 
 `lucas_lehnert@brown.edu`.
 
-.. toctree::
+.. toctreezzzzzzzzzzz::
    :maxdepth: 2
    :caption: Contents:
 
