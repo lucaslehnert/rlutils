@@ -14,11 +14,9 @@ from .buffer_sampler import BufferIteratorSARS
 from .buffer_sampler import BufferIteratorSARST
 from .buffer_sampler import BufferIteratorException
 from .simulate import simulate
-from .simulate import simulate_gracefully
 from .simulate import replay_trajectory
 from .simulate import transition_listener
 from .simulate import TransitionListener
-from .simulate import SimulationTimeout
 
 
 __all__ = [

@@ -8,7 +8,7 @@ from unittest import TestCase
 
 
 class TestSimulate(TestCase):
-    def test_simulate_gracefully(self):
+    def test_simulate(self):
         import rlutils as rl
         import numpy as np
         logger = rl.logging.LoggerEpisodeLength()
@@ -26,7 +26,7 @@ class TestSimulate(TestCase):
                 rl.environment.gridworld.GridWorldAction.DOWN,
                 rl.environment.gridworld.GridWorldAction.DOWN
             ])
-            rl.data.simulate_gracefully(mdp, policy, logger, max_steps=10)
+            rl.data.simulate(mdp, policy, logger, max_steps=10)
         self.assertTrue(np.all(logger.get_episode_length() == np.ones(5) * 10))
 
     def _traj_equal(self, traj_1, traj_2):
@@ -99,7 +99,7 @@ class TestSimulate(TestCase):
 
         mdp = rl.environment.PuddleWorld(slip_prob=0.)
         policy = rl.policy.ActionSequencePolicy([rl.environment.gridworld.GridWorldAction.UP] * 101)
-        rl.data.simulate_gracefully(mdp, policy, rl.data.transition_listener(logger_1, logger_2), max_steps=100)
+        rl.data.simulate(mdp, policy, rl.data.transition_listener(logger_1, logger_2), max_steps=100)
         traj_1 = logger_1.get_trajectory_list()[0]
         traj_2 = logger_2.get_trajectory_list()[0]
 
