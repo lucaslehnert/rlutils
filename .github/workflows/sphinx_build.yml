@@ -1,7 +1,8 @@
-# This workflow will install Python dependencies, run tests and lint with a variety of Python versions
+# This workflow will install Python dependencies, run make to build the sphinx
+# documentation.
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
 
-name: pytest
+name: sphinx_build
 
 on:
   push:
@@ -31,7 +32,7 @@ jobs:
           libsmpeg-dev libsdl1.2-dev libportmidi-dev libswscale-dev \
           libavformat-dev libavcodec-dev libfreetype6-dev pandoc
         python -m pip install --upgrade pip
-        pip install Sphinx==3.5.2 sphinx-rtd-theme==0.5.1 nbsphinx==0.8.2 pandoc
+        pip install Sphinx==3.5.2 sphinx-rtd-theme==0.5.1 nbsphinx pandoc
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Make sphinx docs.
       run: |
