@@ -47,7 +47,7 @@ documentation on Ubuntu 20.04, first install the following packages using pip:
 
 ```
 sudo apt install pandoc
-pip install Sphinx==3.5.2 sphinx-rtd-theme==0.5.1 nbsphinx==0.8.2 pandoc
+pip install Sphinx==3.5.2 sphinx-rtd-theme==0.5.1 nbsphinx pandoc
 ```
 
 To update the API docs with sphinx run the following:

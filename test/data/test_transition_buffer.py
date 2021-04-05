@@ -16,10 +16,10 @@ class TestPersistenceTrajectory(unittest.TestCase):
         env = rlutils.environment.PuddleWorld()
         policy = rlutils.policy.uniform_random(4)
         buffer = rlutils.data.TransitionBufferFixedSize(10000)
-        rlutils.data.simulate_gracefully(env, policy, buffer)
+        rlutils.data.simulate(env, policy, buffer)
         self.assertFalse(buffer.full())
         while not buffer.full():
-            rlutils.data.simulate_gracefully(env, policy, buffer)
+            rlutils.data.simulate(env, policy, buffer)
         self.assertTrue(buffer.full())
         buffer.on_simulation_timeout()
 
