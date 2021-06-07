@@ -4,29 +4,25 @@
 # This source code is licensed under an MIT license found in the LICENSE file in the root directory of this project.
 #
 
-from rlutils.data import TransitionBuffer, TransitionListener
+from rlutils.data import TransitionListener, ReplayBuffer, ACTION, REWARD, TERM
 
 
 class LoggerTrajectory(TransitionListener):
-    """Class used to log a trajectory.
-
-    :param TransitionListener: [description]
-    :type TransitionListener: [type]
-    """
-    def __init__(self):
-        """Constructor.
-        """
-        self._curr_trajectory = TransitionBuffer()
-        self._trajectory_list = []
+    def __init__(self, replay_buffer: ReplayBuffer):
+        self.replay_buffer = replay_buffer
 
     def update_transition(self, s, a, r, s_next, t, info):
-        self._curr_trajectory.update_transition(s, a, r, s_next, t, info)
+        self.replay_buffer.add_transition(
+            state=s,
+            transition={
+                ACTION: a,
+                REWARD: r,
+                TERM: t
+            },
+            next_state=s_next
+        )
         if t:
-            self.on_simulation_timeout()
-
-    def get_trajectory_list(self):
-        return self._trajectory_list
+            self.replay_buffer.finish_current_sequence()
 
     def on_simulation_timeout(self):
-        self._trajectory_list.append(self._curr_trajectory)
-        self._curr_trajectory = TransitionBuffer()
+        self.replay_buffer.finish_current_sequence()

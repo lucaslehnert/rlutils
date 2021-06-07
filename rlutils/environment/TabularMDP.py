@@ -17,6 +17,7 @@ from .gridworld import add_terminal_states
 
 
 class TabularMDP(gym.Env):
+    ONE_HOT = 'one_hot'
 
     def __init__(self, t_mat, r_mat, idx_start_list, idx_goal_list, name='TabularMDP'):
         num_states = np.shape(t_mat)[1]
@@ -48,11 +49,14 @@ class TabularMDP(gym.Env):
     def _state_to_idx(self, s):
         return np.where(s == 1.)[0][0]
 
+    def _wrap_in_state_dict(self, s: np.ndarray) -> dict:
+        return {TabularMDP.ONE_HOT: s}
+
     def reset(self, idx_start=None):
         if idx_start is None:
             idx_start = np.random.choice(self._idx_start_list)
         self._s = self._idx_to_state(idx_start)
-        return np.copy(self._s)
+        return self._wrap_in_state_dict(np.copy(self._s))
 
     def step(self, action):
         s_prob = np.matmul(self._s, self._t_mat[action])
@@ -64,7 +68,7 @@ class TabularMDP(gym.Env):
             done = True
         else:
             done = False
-        return np.copy(self._s), r, done, {}
+        return self._wrap_in_state_dict(np.copy(self._s)), r, done, {}
 
     def get_t_mat_r_mat(self):
         return np.copy(self._t_mat), np.copy(self._r_mat)
