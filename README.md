@@ -25,7 +25,7 @@ If you have any questions about rlutils, please send email to
 
 rlutils is tested on python 3.7, 3.8, and 3.9.
 
-This package can be installed using pip:
+An older version of this package can be installed using pip:
 
 ```
 pip install rlutils
