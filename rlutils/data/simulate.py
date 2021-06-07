@@ -45,21 +45,6 @@ def simulate(mdp, policy, transition_listener, max_steps=5000):
             break
 
 
-def replay_trajectory(trajectory, transition_listener):
-    """
-    Replay the given trajectory through all a transition listener.
-
-    :param trajectory: Trajectory that is replayed.
-    :param transition_listener: Transition listener that is updated.
-    :return: None
-
-    The i variable can be used for debugging and counting the different transitions. Otherwise it has not other
-    function.
-    """
-    for i, (s, a, r, s_next, done, info) in enumerate(zip(*trajectory.all())):
-        transition_listener.update_transition(s, a, r, s_next, done, info)
-
-
 class TransitionListener(ABC):
     @abstractmethod
     def update_transition(self, s, a, r, s_next, t, info): # pragma: no cover

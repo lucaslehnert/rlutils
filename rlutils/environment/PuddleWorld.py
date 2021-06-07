@@ -7,11 +7,15 @@
 import numpy as np
 
 from .TabularMDP import TabularMDP
-from .gridworld import generate_gridworld_transition_function, generate_mdp_from_transition_and_reward_function, \
-    pt_to_idx, idx_to_pt
+from .gridworld import generate_gridworld_transition_function
+from .gridworld import generate_mdp_from_transition_and_reward_function
+from .gridworld import pt_to_idx, idx_to_pt
 
 
 class PuddleWorld(TabularMDP):
+    X = 'x'
+    Y = 'y'
+
     def __init__(self, slip_prob=0.05, dtype=np.float32):
         start = (0, 0)
         goal = (0, 9)
@@ -33,6 +37,16 @@ class PuddleWorld(TabularMDP):
                                                                         dtype=dtype)
         super().__init__(t_mat, r_mat, [pt_to_idx(start, (10, 10))], [pt_to_idx(goal, (10, 10))], name='PuddleWorld')
 
+    def _augment_state_dict(self, s: dict) -> dict:
+        i = np.where(s[TabularMDP.ONE_HOT] == 1)[0][0]
+        x, y = idx_to_pt(i, (10, 10))
+        s[PuddleWorld.X] = x
+        s[PuddleWorld.Y] = y
+        return s
+
+    def reset(self, *params, **kwargs):
+        return self._augment_state_dict(super().reset(*params, **kwargs))
+    
     def step(self, action):
         s_n, r, t, _ = super().step(action)
         if r == 1.:
@@ -41,4 +55,4 @@ class PuddleWorld(TabularMDP):
             info = {'puddle': True, 'goal': False}
         else:
             info = {'puddle': False, 'goal': False}
-        return s_n, r, t, info
+        return self._augment_state_dict(s_n), r, t, info

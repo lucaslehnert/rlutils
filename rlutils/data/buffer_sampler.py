@@ -5,39 +5,46 @@
 #
 
 import numpy as np
+from .replaybuffer import ReplayBuffer
 
 
 class BufferSamplerUniform(object):
     """
-    BufferSamplerUniform implements an iterator to sample uniformly from a transition buffer. The iterator will stop
-    after the specified number of samples.
+    BufferSamplerUniform implements an iterator to sample uniformly from a 
+    transition buffer. The iterator will stop after the specified number of 
+    samples.
     """
-    def __init__(self, buffer, batch_size, num_samples):
+    def __init__(self, buffer: ReplayBuffer, batch_size: int, num_samples: int):
         '''
 
         :param buffer: Transition buffer to sample from.
         :param batch_size: Batch size.
-        :param num_samples: Number of samples drawn from buffer. If none, then the buffer will draw samples forever
-            (infinite loop).
+        :param num_samples: Number of samples drawn from buffer. If none, then 
+            the buffer will draw samples forever (infinite loop).
         '''
         self._buffer = buffer
         self._batch_size = batch_size
-        self._num_samples = num_samples
-        self._cnt_samples = 0
+        self._num_sampl = num_samples
+        self._cnt_sampl = 0
         self._idx_list = np.arange(self._buffer.max_len())
 
     def __iter__(self):
         return self
 
     def __next__(self):
-        if self._num_samples is not None and self._cnt_samples >= self._num_samples:
+        if self._num_sampl is not None and self._cnt_sampl >= self._num_sampl:
             raise StopIteration
         if len(self._buffer) < self._batch_size:
+            batch = self._batch_size
+            n = self._buffer.num_transitions()
             raise BufferIteratorException(
-                'Cannot sample {} transitions from buffer of size {}.'.format(self._batch_size, len(self._buffer)))
-        self._cnt_samples += 1
-        idx_list = np.random.choice(self._idx_list[:len(self._buffer)], size=self._batch_size)
-        return self._buffer.all(idx_list=idx_list)
+                f'Cannot sample {batch} transitions from buffer of size {n}.'
+            )
+        self._cnt_sampl += 1
+        idx_list = np.random.choice(
+            self._idx_list[:n], size=self._batch_size
+        )
+        return self._buffer.ge
 
 
 class BufferIteratorException(Exception):
