@@ -23,7 +23,7 @@ If you have any questions about rlutils, please send email to
 
 ## Installation
 
-rlutils is tested on python 3.5, 3.6, 3.7, and 3.8.
+rlutils is tested on python 3.7, 3.8, and 3.9.
 
 This package can be installed using pip:
 
