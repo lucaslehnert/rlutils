@@ -19,7 +19,7 @@ rlutils' goal is to provide a framework and utility functions for implementing
 RL algorithms.
 
 If you have any questions about rlutils, please send email to 
-`lucas_lehnert@brown.edu`.
+`lucas.lehnert@mila.quebec`.
 
 ## Installation
 
