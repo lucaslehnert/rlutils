@@ -44,15 +44,15 @@ class PuddleWorld(TabularMDP):
         s[PuddleWorld.Y] = y
         return s
 
-    def reset(self, *params, **kwargs):
-        return self._augment_state_dict(super().reset(*params, **kwargs))
+    # def reset(self, *params, **kwargs):
+    #     return self._augment_state_dict(super().reset(*params, **kwargs))
     
-    def step(self, action):
-        s_n, r, t, _ = super().step(action)
-        if r == 1.:
-            info = {'puddle': False, 'goal': True}
-        elif r == -1:
-            info = {'puddle': True, 'goal': False}
-        else:
-            info = {'puddle': False, 'goal': False}
-        return self._augment_state_dict(s_n), r, t, info
+    # def step(self, action):
+    #     s_n, r, t, _ = super().step(action)
+    #     if r == 1.:
+    #         info = {'puddle': False, 'goal': True}
+    #     elif r == -1:
+    #         info = {'puddle': True, 'goal': False}
+    #     else:
+    #         info = {'puddle': False, 'goal': False}
+    #     return self._augment_state_dict(s_n), r, t, info

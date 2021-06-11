@@ -30,3 +30,4 @@ class Agent(TransitionListener):
         Reset agent to its initialization.
         :return:
         """
+    
