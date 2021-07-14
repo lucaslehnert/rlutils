@@ -62,9 +62,10 @@ class BufferSamplerUniformSARS(BufferSamplerUniform):
 
 
 class BufferIterator(object):
-    """
-    BufferIterator implements an iterator to iterate in batches of transitions over a transition buffer. After all
-    transitions are sampled from the buffer, sampling will begin again at the beginning of the buffer. 
+    """BufferIterator implements an iterator to iterate in batches of 
+    transitions over a transition buffer. After all transitions are sampled 
+    from the buffer, sampling will begin again at the beginning of the buffer. 
+
     """
     def __init__(self, buffer, batch_size, num_samples, shuffle=True):
         self._buffer = buffer

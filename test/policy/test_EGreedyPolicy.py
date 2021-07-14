@@ -14,14 +14,21 @@ class TestEGreedyPolicy(TestCase):
         from scipy.stats import chisquare
         from itertools import product
 
-        for (seed, eps, state) in product([1, 12, 123, 1234, 12345], [0., .25, .5, .75, 1.], [0, 1]):
+        it = product(
+            [1, 12, 123, 1234, 12345], 
+            [0., .25, .5, .75, 1.], 
+            [0, 1]
+        )
+        for (seed, eps, state) in it:
             rl.set_seeds(seed)
             q_vals = np.array([
                 [0, 1],
                 [0, 1],
                 [1, 0]
             ], dtype=np.float32)
-            agent = rl.agent.ValueFunctionAgent(q_fun=lambda s: np.matmul(q_vals, s))
+            agent = rl.agent.ValueFunctionAgent(
+                q_fun=lambda s: np.matmul(q_vals, s)
+            )
 
             prob_greedy = np.array(q_vals, copy=True) / np.sum(q_vals, axis=0)
             prob_uniform = np.ones(np.shape(q_vals)) / 3.
@@ -37,5 +44,6 @@ class TestEGreedyPolicy(TestCase):
                 self.assertTrue(np.all([a in [0, 1, 2] for a in act]))
 
             act_cnts = np.array([np.sum(act == i) for i in range(3)])
-            p_val = chisquare(act_cnts, prob[:, state] * 100. + 1e-5).pvalue
+            p_val = chisquare(act_cnts, prob[:, state] * 100. + 1e-10).pvalue
+            print(p_val)
             self.assertLessEqual(.01, p_val)
