@@ -36,7 +36,7 @@ class TestPersistenceTabularMDP(unittest.TestCase):
     def test_state_defaults(self):
         import rlutils as rl
         import numpy as np
-        
+
         mdp = rl.environment.PuddleWorld()
         state_defaults = mdp.state_defaults()
         self.assertTrue(np.allclose(
@@ -55,11 +55,11 @@ class TestPersistenceTabularMDP(unittest.TestCase):
             state_defaults[rl.environment.PuddleWorld.Y],
             np.float32(-1)
         ))
-    
+
     def test_transition_defaults(self):
         import rlutils as rl
         import numpy as np
-        
+
         mdp = rl.environment.PuddleWorld()
         transition_defaults = mdp.transition_defaults()
         self.assertTrue(np.allclose(
@@ -74,7 +74,6 @@ class TestPersistenceTabularMDP(unittest.TestCase):
             transition_defaults[rl.data.TERM],
             False
         ))
-        
 
     def test_name(self):
         import rlutils as rl
@@ -141,4 +140,4 @@ class TestPersistenceTabularMDP(unittest.TestCase):
         This test is implemented in test/data/test_simulate.py in method 
         TestSimulate.test_simulate().
         """
-        pass    
+        pass
