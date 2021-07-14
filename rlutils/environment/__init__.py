@@ -6,7 +6,8 @@
 
 from . import gridworld
 from .TabularMDP import TabularMDP
+from .Task import Task
 from .PuddleWorld import PuddleWorld
 
 
-__all__ = ["gridworld", "TabularMDP", "PuddleWorld"]
+__all__ = ["gridworld", "TabularMDP", "Task", "PuddleWorld"]

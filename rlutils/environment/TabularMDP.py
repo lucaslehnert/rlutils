@@ -5,28 +5,29 @@
 #
 
 import os
-import os.path as osp
 
-import gym
 import numpy as np
 import yaml
-from gym.spaces import Discrete
 
 from typing import List, Tuple
 from rlutils.utils import one_hot
 from .gridworld import add_terminal_states
+from .Task import Task
+from typing import Dict
+from ..data import ACTION, REWARD, TERM
 
 
-class TabularMDP(gym.Env):
+class TabularMDP(Task):
     ONE_HOT = 'one_hot'
+    IDX = 'idx'
 
     def __init__(
-            self, 
-            t_mat: np.ndarray, 
-            r_mat: np.ndarray, 
-            idx_start_list: List[int], 
-            idx_goal_list: List[int], 
-            name: str='TabularMDP'):
+            self,
+            t_mat: np.ndarray,
+            r_mat: np.ndarray,
+            idx_start_list: List[int],
+            idx_goal_list: List[int],
+            name: str = 'TabularMDP'):
         num_states = np.shape(t_mat)[1]
         term_state_mask = np.array(
             [i in idx_goal_list for i in range(num_states)], dtype=bool
@@ -41,7 +42,6 @@ class TabularMDP(gym.Env):
 
         self._s = self._idx_to_state(np.random.choice(self._idx_start_list))
         num_actions, _, _ = np.shape(self._t_mat)
-        self.action_space = Discrete(num_actions)
 
         self._name = name
 
@@ -50,6 +50,19 @@ class TabularMDP(gym.Env):
 
     def goal_state_list(self) -> np.ndarray:
         return np.array(self._idx_goal_list, copy=True)
+
+    def state_defaults(self) -> Dict[str, np.ndarray]:
+        return {
+            TabularMDP.ONE_HOT: np.zeros(self.num_states(), dtype=np.float32),
+            TabularMDP.IDX: np.int32(-1)
+        }
+        
+    def transition_defaults(self) -> Dict[str, np.ndarray]:
+        return {
+            ACTION: np.int32(-1),
+            REWARD: np.float32(0),
+            TERM: False
+        }
 
     def _idx_to_state(self, i):
         _, n, _ = np.shape(self._t_mat)
@@ -71,7 +84,11 @@ class TabularMDP(gym.Env):
         return s
 
     def _wrap_in_state_dict(self, s: np.ndarray) -> dict:
-        return self._augment_state_dict({TabularMDP.ONE_HOT: s})
+        state_dict = {
+            TabularMDP.ONE_HOT: s,
+            TabularMDP.IDX: np.where(s)[0][0]
+        }
+        return self._augment_state_dict(state_dict)
 
     def reset(self, idx_start=None) -> dict:
         if idx_start is None:
@@ -116,19 +133,19 @@ class TabularMDP(gym.Env):
         Args:
             meta_filename (str): File name (include .yaml extension in string)
         """
-        save_dir = osp.split(meta_filename)[0]
+        save_dir = os.path.split(meta_filename)[0]
         os.makedirs(save_dir, exist_ok=True)
-        fn_base = osp.splitext(osp.split(meta_filename)[1])[0]
+        fn_base = os.path.splitext(os.path.split(meta_filename)[1])[0]
 
         t_mat_fn = '{}_t_mat.npy'.format(fn_base)
-        np.save(osp.join(save_dir, t_mat_fn), self._t_mat)
+        np.save(os.path.join(save_dir, t_mat_fn), self._t_mat)
         r_mat_fn = '{}_r_mat.npy'.format(fn_base)
-        np.save(osp.join(save_dir, r_mat_fn), self._r_mat)
+        np.save(os.path.join(save_dir, r_mat_fn), self._r_mat)
         idx_start_list_fn = '{}_idx_start_list.npy'.format(fn_base)
-        np.save(osp.join(save_dir, idx_start_list_fn), self._idx_start_list)
+        np.save(os.path.join(save_dir, idx_start_list_fn), self._idx_start_list)
         idx_goal_list_fn = '{}_idx_goal_list.npy'.format(fn_base)
         np.save(
-            osp.join(save_dir, f'{fn_base}_idx_goal_list.npy'), 
+            os.path.join(save_dir, f'{fn_base}_idx_goal_list.npy'),
             self._idx_goal_list
         )
 
@@ -154,17 +171,18 @@ class TabularMDP(gym.Env):
         """
         with open(meta_filename, 'r') as f:
             mdp_dict = yaml.load(f, Loader=yaml.Loader)
-        save_dir = osp.split(meta_filename)[0]
+        save_dir = os.path.split(meta_filename)[0]
 
-        t_mat = np.load(osp.join(save_dir, mdp_dict['t_mat']))
-        r_mat = np.load(osp.join(save_dir, mdp_dict['r_mat']))
-        idx_start_list = np.load(osp.join(save_dir, mdp_dict['idx_start_list']))
-        idx_goal_list = np.load(osp.join(save_dir, mdp_dict['idx_goal_list']))
+        t_mat = np.load(os.path.join(save_dir, mdp_dict['t_mat']))
+        r_mat = np.load(os.path.join(save_dir, mdp_dict['r_mat']))
+        idx_start_list = np.load(os.path.join(
+            save_dir, mdp_dict['idx_start_list']))
+        idx_goal_list = np.load(os.path.join(
+            save_dir, mdp_dict['idx_goal_list']))
         mdp = TabularMDP(
             t_mat, r_mat, idx_start_list, idx_goal_list, name=mdp_dict['name']
         )
         return mdp
-
 
 
 class TabularMDPException(Exception):
