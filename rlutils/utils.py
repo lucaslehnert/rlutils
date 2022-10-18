@@ -8,11 +8,12 @@ import random
 import time
 from abc import abstractmethod
 from datetime import timedelta
+from typing import Callable, Any
 
 import numpy as np
 
 
-def set_seeds(seed):
+def set_seeds(seed: int):
     """
     Shorthand for setting random number seeds for the libraries numpy and random.
 
@@ -23,7 +24,7 @@ def set_seeds(seed):
     random.seed(seed)
 
 
-def one_hot(i, n, dtype=np.float32):
+def one_hot(i: int, n: int, dtype=np.float32):
     """
     Construct a one-hot bit vector stored in numpy.
 
@@ -37,7 +38,7 @@ def one_hot(i, n, dtype=np.float32):
     return v
 
 
-class Experiment(object):
+class Experiment:
     """
     Abstract experiment super class. An experiment can implement this super class.
 
@@ -68,14 +69,15 @@ class Experiment(object):
         """
         pass
 
-    @classmethod
-    def load(self, save_dir: str):  # pragma: no cover
+    @staticmethod
+    def load(save_dir: str):  # pragma: no cover
         """
         Classmethod used to load an experiment from a meta file.
         :param save_dir: Directory into which experiment is persisted.
         :return: An instance of Experiment.
         """
-        raise NotImplemented('load_experiment must be implemented by a subclass.')
+        raise NotImplemented(
+            'load_experiment must be implemented by a subclass.')
 
     @classmethod
     def get_class_name(cls):  # pragma: no cover
@@ -84,25 +86,28 @@ class Experiment(object):
 
 class ExperimentException(Exception):  # pragma: no cover
     """
-    Exception thrown by the Experiment class. This class is deprecated and will be removed.
+    Exception thrown by the Experiment class. This class is deprecated and will 
+    be removed.
     """
     pass
 
 
-def repeat_function_with_ndarray_return(func, repeats=20, dtype=None):
-    """
-    Function decorator that repeats a function that returns a numpy array. The returned numpy arrays are stacked and
-    the stacked array is returned.
+def repeat_function_with_ndarray_return(
+    func: Callable[..., np.ndarray], 
+    repeats: int=20
+) -> Callable[..., np.ndarray]:
+    """Function decorator that repeats a function that returns a numpy array. 
+    The returned numpy arrays are stacked and the stacked array is returned.
 
-    :param func: A function func(*params, **kwargs) that returns a numpy array. The size and dtype of the numpy array
-        has to be constant and cannot change with the provided function parameters.
-    :param repeats: Number of times the function func is repeated.
-    :param dtype: Dtype of the numpy arrays func returns. Default is None. In this case the dtype of the func return is
-        not modified.
-    :return: Stacked return numpy array.
+    Args:
+        func (Callable[..., np.ndarray]): _description_
+        repeats (int, optional): _description_. Defaults to 20.
+
+    Returns:
+        np.ndarray: _description_
     """
 
     def func_rep(*params, **kwargs):
-        return np.array([func(*params, **kwargs) for _ in range(repeats)], dtype=dtype)
+        return np.array([func(*params, **kwargs) for _ in range(repeats)])
 
     return func_rep

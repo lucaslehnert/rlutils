@@ -1,5 +1,5 @@
 from rlutils import data
-from rlutils.data.replaybuffer import REWARD, TERM
+from rlutils.data.replaybuffer import Reward, Term
 from unittest import TestCase
 
 
@@ -110,24 +110,24 @@ def _three_transition_buffer():
             'f': False
         },
         transition_defaults={
-            rl.data.ACTION: 0,
-            rl.data.REWARD: 0.,
-            rl.data.TERM: False
+            rl.data.Action: 0,
+            rl.data.Reward: 0.,
+            rl.data.Term: False
         }
     )
     buffer.add_transition(
         {'s': 1, 'f': False},
-        {rl.data.ACTION: 0, rl.data.REWARD: 0., rl.data.TERM: False},
+        {rl.data.Action: 0, rl.data.Reward: 0., rl.data.Term: False},
         {'s': 2, 'f': False}
     )
     buffer.add_transition(
         {'s': 2, 'f': False},
-        {rl.data.ACTION: 0, rl.data.REWARD: 0., rl.data.TERM: False},
+        {rl.data.Action: 0, rl.data.Reward: 0., rl.data.Term: False},
         {'s': 3, 'f': False}
     )
     buffer.add_transition(
         {'s': 3, 'f': False},
-        {rl.data.ACTION: 0, rl.data.REWARD: 0., rl.data.TERM: True},
+        {rl.data.Action: 0, rl.data.Reward: 0., rl.data.Term: True},
         {'s': 4, 'f': True}
     )
     return buffer

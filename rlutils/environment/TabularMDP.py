@@ -3,18 +3,15 @@
 #
 # This source code is licensed under an MIT license found in the LICENSE file in the root directory of this project.
 #
-
 import os
-
 import numpy as np
 import yaml
 
 from typing import List, Tuple
 from rlutils.utils import one_hot
 from .gridworld import add_terminal_states
-from .Task import Task, TransitionSpec, Column
-from typing import Dict
-from ..data import ACTION, REWARD, TERM
+from .Task import Task
+from ..data import TransitionSpec, Column, ActionIndexColumn, RewardColumn, TermColumn
 
 
 class TabularMDP(Task):
@@ -55,17 +52,13 @@ class TabularMDP(Task):
         return TransitionSpec(
             state_columns=[
                 Column(
-                    TabularMDP.ONE_HOT, 
-                    shape=(self.num_states,), 
+                    TabularMDP.ONE_HOT,
+                    shape=(self.num_states,),
                     dtype=np.float32
                 ),
                 Column(TabularMDP.IDX, shape=(), dtype=float)
             ],
-            transition_columns=[
-                Column(ACTION, shape=(), dtype=int),
-                Column(REWARD, shape=(), dtype=float),
-                Column(TERM, shape=(), dtype=bool)
-            ]
+            transition_columns=[ActionIndexColumn, RewardColumn, TermColumn]
         )
 
     # def state_defaults(self) -> Dict[str, np.ndarray]:
@@ -73,7 +66,7 @@ class TabularMDP(Task):
     #         TabularMDP.ONE_HOT: np.zeros(self.num_states(), dtype=np.float32),
     #         TabularMDP.IDX: np.int32(-1)
     #     }
-        
+
     # def transition_defaults(self) -> Dict[str, np.ndarray]:
     #     return {
     #         ACTION: np.int32(-1),
@@ -81,11 +74,11 @@ class TabularMDP(Task):
     #         TERM: False
     #     }
 
-    def _idx_to_state(self, i):
+    def _idx_to_state(self, i: int) -> np.ndarray:
         _, n, _ = np.shape(self._t_mat)
         return one_hot(i, n)
 
-    def _state_to_idx(self, s):
+    def _state_to_idx(self, s: np.ndarray) -> int:
         return np.where(s == 1.)[0][0]
 
     def _augment_state_dict(self, s: dict) -> dict:

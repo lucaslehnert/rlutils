@@ -4,7 +4,7 @@
 # This source code is licensed under an MIT license found in the LICENSE file in the root directory of this project.
 #
 
-from rlutils.data import TransitionListener, ReplayBuffer, ACTION, REWARD, TERM
+from rlutils.data import TransitionListener, ReplayBuffer, Action, Reward, Term
 
 
 class LoggerTrajectory(TransitionListener):
@@ -15,9 +15,9 @@ class LoggerTrajectory(TransitionListener):
         self.replay_buffer.add_transition(
             state=s,
             transition={
-                ACTION: a,
-                REWARD: r,
-                TERM: t
+                Action: a,
+                Reward: r,
+                Term: t
             },
             next_state=s_next
         )

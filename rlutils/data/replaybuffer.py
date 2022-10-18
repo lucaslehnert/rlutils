@@ -10,16 +10,15 @@ import numpy as np
 import h5py
 import os
 import random
-from typing import List, Dict
-from .simulate import TransitionListener
+from typing import List, Dict, Optional
 
 
-ACTION = 'action'
-REWARD = 'reward'
-TERM = 'term'
+Action = b"action"
+Reward = b"reward"
+Term = b"term"
 
 
-class ReplayBuffer(object):
+class ReplayBuffer:
     """This class describes the replay buffer interface.
     """
 
@@ -63,9 +62,10 @@ class ReplayBuffer(object):
 
     @abstractmethod
     def get_column(
-            self,
-            column_name: str,
-            idxs: List[int] = None) -> np.ndarray:
+        self,
+        column_name: str,
+        idxs: Optional[List[int]] = None
+    ) -> np.ndarray:
         """Get values for the column with name ``column_name``. If transition 
         indices are provided, then only the value of the indexed transitions are
         returned. Here, ``column_name'' must be contained in the list returned 
@@ -75,7 +75,7 @@ class ReplayBuffer(object):
         :param column_name: Transition column name.
         :type column_name: str
         :param idxs: Transition indices, defaults to None
-        :type idxs: List[int], optional
+        :type idxs: Optional[List[int]], optional
         :return: Column values.
         :rtype: np.ndarray
         """
@@ -83,10 +83,11 @@ class ReplayBuffer(object):
 
     @abstractmethod
     def set_column(
-            self,
-            column_name: str,
-            column_value: np.ndarray,
-            idxs: List[int] = None):
+        self,
+        column_name: str,
+        column_value: np.ndarray,
+        idxs: Optional[List[int]] = None
+    ):
         """Set values for the column with name ``column_name``. If transition 
         indices are provided, then only the indexed transitions are updated. 
         Here, ``column_name`` must be contained in the list returned by 
@@ -97,15 +98,16 @@ class ReplayBuffer(object):
         :param column_value: Value updates.
         :type column_value: np.ndarray
         :param idxs: Transition indices, defaults to None
-        :type idxs: List[int], optional
+        :type idxs: Optional[List[int]], optional
         """
         pass
 
     @abstractmethod
     def get_state_column(
-            self,
-            column_name: str,
-            idxs: List[int] = None) -> np.ndarray:
+        self,
+        column_name: str,
+        idxs: Optional[List[int]] = None
+    ) -> np.ndarray:
         """Get state column values with name ``column_name`` for all states 
         contained in the replay buffer. If indices are provided, then only 
         values for the corresonding states are returned. Indices can range from
@@ -115,7 +117,7 @@ class ReplayBuffer(object):
         :param column_name: Column name
         :type column_name: str
         :param idxs: States indices, defaults to None.
-        :type idxs: List[int], optional
+        :type idxs: Optional[List[int]], optional
         :return: Column values.
         :rtype: np.ndarray
         """
@@ -123,10 +125,11 @@ class ReplayBuffer(object):
 
     @abstractmethod
     def set_state_column(
-            self,
-            column_name: str,
-            column_value: np.ndarray,
-            idxs: List[int] = None):
+        self,
+        column_name: str,
+        column_value: np.ndarray,
+        idxs: Optional[List[int]] = None
+    ):
         """Set values for the column with name ``column_name``. If state indices
         are provided, then only the indexed transitions are updated. Here, 
         ``column_name'' must be contained in the list returned by 
@@ -144,9 +147,10 @@ class ReplayBuffer(object):
 
     @abstractmethod
     def get_start_state_column(
-            self,
-            column_name: str,
-            idxs: List[int] = None) -> np.ndarray:
+        self,
+        column_name: str,
+        idxs: Optional[List[int]] = None
+    ) -> np.ndarray:
         """Get state column values with name ``column_name`` for all states 
         that are at the start of some transition. If indices are provided, then 
         only start-state values for the corresonding transitions are returned. 
@@ -164,10 +168,11 @@ class ReplayBuffer(object):
 
     @abstractmethod
     def set_start_state_column(
-            self,
-            column_name: str,
-            column_value: np.ndarray,
-            idxs: List[int] = None):
+        self,
+        column_name: str,
+        column_value: np.ndarray,
+        idxs: Optional[List[int]] = None
+    ):
         """Set start-state values for the state column with name 
         ``column_name``. If state indices are provided, then only the indexed 
         transitions are updated. Here, ``column_name'' must be contained in the 
@@ -186,9 +191,10 @@ class ReplayBuffer(object):
 
     @abstractmethod
     def get_next_state_column(
-            self,
-            column_name: str,
-            idxs: List[int] = None) -> np.ndarray:
+        self,
+        column_name: str,
+        idxs: Optional[List[int]] = None
+    ) -> np.ndarray:
         """Get state column values with name ``column_name`` for all states 
         that are at the end of some transition. If indices are provided, then 
         only end-state values for the corresonding transitions are returned. 
@@ -206,10 +212,11 @@ class ReplayBuffer(object):
 
     @abstractmethod
     def set_next_state_column(
-            self,
-            column_name: str,
-            column_value: np.ndarray,
-            idxs: List[int] = None):
+        self,
+        column_name: str,
+        column_value: np.ndarray,
+        idxs:  Optional[List[int]] = None
+    ):
         """Set end-state values for the state column with name ``column_name``. 
         If state indices are provided, then only the indexed transitions are 
         updated. Here, ``column_name'' must be contained in the list returned by
@@ -227,10 +234,11 @@ class ReplayBuffer(object):
 
     @abstractmethod
     def add_transition(
-            self,
-            state: Dict[str, np.ndarray],
-            transition: Dict[str, np.ndarray],
-            next_state: Dict[str, np.ndarray]):
+        self,
+        state: Dict[str, np.ndarray],
+        transition: Dict[str, np.ndarray],
+        next_state: Dict[str, np.ndarray]
+    ):
         """Add a transition to the replay buffer. A transition consists of three
         different dictionaries: A ``state`` dictionary describing the start
         state, a ``transition`` dictionary describing the transition (e.g.
@@ -295,9 +303,11 @@ class ReplayBufferException(Exception):
 
 class Trajectory(ReplayBuffer):
     def __init__(
-            self,
-            state_defaults: Dict[str, np.ndarray],
-            transition_defaults: Dict[str, np.ndarray]):
+        self,
+        transition_spec: 
+        state_defaults: Dict[str, np.ndarray],
+        transition_defaults: Dict[str, np.ndarray]
+    ):
         if len(state_defaults) == 0:
             raise ReplayBufferException(
                 'Cannot construct trajectory with empty state columns.')
@@ -307,19 +317,20 @@ class Trajectory(ReplayBuffer):
 
         self._state_defaults = state_defaults
         self._transition_defaults = transition_defaults
-        self._state_col = {k: [] for k in state_defaults.keys()}
+        self._state_col: Dict[str, ] = {k: [] for k in state_defaults.keys()}
         self._transition_col = {k: [] for k in transition_defaults.keys()}
 
     def persist_columns_in_h5_group(
-            self, 
-            h5grp, 
-            state_columns: List[str]=None, 
-            transition_columns: List[str]=None):
+        self,
+        h5grp,
+        state_columns: Optional[List[str]] = None,
+        transition_columns: Optional[List[str]] = None
+    ):
         if state_columns is None:
             state_columns = self._state_col.keys()
         if transition_columns is None:
             transition_columns = self._transition_col.keys()
-        
+
         state_grp = h5grp.create_group('state_col')
         for k in state_columns:
             v = self._state_col.get(k)
@@ -359,7 +370,7 @@ class Trajectory(ReplayBuffer):
 
     def add_transition(
             self,
-            state: Dict[str, np.ndarray], 
+            state: Dict[str, np.ndarray],
             transition: Dict[str, np.ndarray],
             next_state: Dict[str, np.ndarray]):
         if self.num_transitions() == 0:
@@ -494,10 +505,10 @@ class TrajectoryBuffer(ReplayBuffer):
         self._state_step_idxs = []
 
     def save_h5(
-            self, 
-            filename: str, 
-            state_columns: List[str]=None, 
-            transition_columns: List[str]=None):
+            self,
+            filename: str,
+            state_columns: List[str] = None,
+            transition_columns: List[str] = None):
         dirname = os.path.split(os.path.abspath(filename))[0]
         os.makedirs(dirname, exist_ok=True)
 
@@ -508,13 +519,13 @@ class TrajectoryBuffer(ReplayBuffer):
                 t.persist_columns_in_h5_group(
                     traj_grp_i, state_columns, transition_columns
                 )
-            
+
             state_defaults_grp = hf.create_group('state_defaults')
             for k, v in self._state_defaults.items():
                 grp = state_defaults_grp.create_group(k)
                 grp.create_dataset('value', data=np.reshape(v, -1))
                 grp.create_dataset('shape', data=np.shape(v))
-            
+
             transition_defaults_grp = hf.create_group('transition_defaults')
             for k, v in self._transition_defaults.items():
                 grp = transition_defaults_grp.create_group(k)
@@ -533,7 +544,7 @@ class TrajectoryBuffer(ReplayBuffer):
             hf.create_dataset(
                 'state_step_idxs', data=np.array(self._state_step_idxs)
             )
-    
+
     @staticmethod
     def load_h5(filename: str) -> TrajectoryBuffer:
         with h5py.File(filename, 'r') as hf:
@@ -555,7 +566,7 @@ class TrajectoryBuffer(ReplayBuffer):
             buffer._state_step_idxs = list(np.array(hf['state_step_idxs']))
 
             traj_keys = [f'{i}' for i in range(len(hf['trajectories'].keys()))]
-        
+
         params = [(filename, k, s_dflts, t_dflts) for k in traj_keys]
         buffer._trajectories = [Trajectory.from_h5_file(*p) for p in params]
         # with mp.Pool() as p:
@@ -566,14 +577,14 @@ class TrajectoryBuffer(ReplayBuffer):
         #     buffer._trajectories.append(Trajectory.from_h5_file(
         #         filename, k, s_dflts, t_dflts
         #     ))
-            # traj_dict = {}
-            # for i, t in hf['trajectories'].items():
-            #     traj = Trajectory.from_h5_group(
-            #         t, state_defaults, transition_defaults
-            #     )
-            #     traj_dict[i] = traj
-            # num_traj = len(traj_dict)
-            # buffer._trajectories = [traj_dict[f'{i}'] for i in range(num_traj)]
+        # traj_dict = {}
+        # for i, t in hf['trajectories'].items():
+        #     traj = Trajectory.from_h5_group(
+        #         t, state_defaults, transition_defaults
+        #     )
+        #     traj_dict[i] = traj
+        # num_traj = len(traj_dict)
+        # buffer._trajectories = [traj_dict[f'{i}'] for i in range(num_traj)]
         return buffer
 
     def get_transition_column_names(self) -> List[str]:
@@ -630,7 +641,8 @@ class TrajectoryBuffer(ReplayBuffer):
             step_idxs = [self._state_step_idxs[i] for i in idxs]
         res = []
         for t, s in zip(traj_idxs, step_idxs):
-            r = self._trajectories[t].get_state_column(column_name, idxs=[s])[0]
+            r = self._trajectories[t].get_state_column(
+                column_name, idxs=[s])[0]
             res.append(r)
         return np.array(res)
 
@@ -768,9 +780,6 @@ class TrajectoryBufferFixedSize(TrajectoryBuffer):
             for i, v in enumerate(self._state_traj_idxs):
                 self._state_traj_idxs[i] = v - 1
 
-
-
-
     # def save_h5(self, filename: str):
     #     """Persist replay buffer into an H5 container.
 
@@ -887,7 +896,8 @@ class ReplayBufferTransitionColumnWrapper(ReplayBuffer):
             column_name: str,
             idxs: List[int] = None) -> np.ndarray:
         if column_name not in self._transition_columns:
-            raise ReplayBufferException(f'Column {column_name} is not visible.')
+            raise ReplayBufferException(
+                f'Column {column_name} is not visible.')
         return self._replay_buffer.get_column(column_name, idxs)
 
     def set_column(
@@ -896,7 +906,8 @@ class ReplayBufferTransitionColumnWrapper(ReplayBuffer):
             column_value: np.ndarray,
             idxs: List[int] = None):
         if column_name not in self._transition_columns:
-            raise ReplayBufferException(f'Column {column_name} it not visible.')
+            raise ReplayBufferException(
+                f'Column {column_name} it not visible.')
         self._replay_buffer.set_column(column_name, column_value, idxs)
 
     def get_state_column(
@@ -999,7 +1010,8 @@ class ReplayBufferStateColumnWrapper(ReplayBuffer):
             column_name: str,
             idxs: List[int] = None) -> np.ndarray:
         if column_name not in self._state_columns:
-            raise ReplayBufferException(f'Column {column_name} it not visible.')
+            raise ReplayBufferException(
+                f'Column {column_name} it not visible.')
         return self._replay_buffer.get_state_column(column_name, idxs)
 
     def set_state_column(
@@ -1008,7 +1020,8 @@ class ReplayBufferStateColumnWrapper(ReplayBuffer):
             column_value: np.ndarray,
             idxs: List[int] = None):
         if column_name not in self._state_columns:
-            raise ReplayBufferException(f'Column {column_name} it not visible.')
+            raise ReplayBufferException(
+                f'Column {column_name} it not visible.')
         self._replay_buffer.set_state_column(column_name, column_value, idxs)
 
     def get_start_state_column(
@@ -1016,7 +1029,8 @@ class ReplayBufferStateColumnWrapper(ReplayBuffer):
             column_name: str,
             idxs: List[int] = None) -> np.ndarray:
         if column_name not in self._state_columns:
-            raise ReplayBufferException(f'Column {column_name} it not visible.')
+            raise ReplayBufferException(
+                f'Column {column_name} it not visible.')
         return self._replay_buffer.get_state_column(column_name, idxs)
 
     def set_start_state_column(
@@ -1025,7 +1039,8 @@ class ReplayBufferStateColumnWrapper(ReplayBuffer):
             column_value: np.ndarray,
             idxs: List[int] = None):
         if column_name not in self._state_columns:
-            raise ReplayBufferException(f'Column {column_name} it not visible.')
+            raise ReplayBufferException(
+                f'Column {column_name} it not visible.')
         self._replay_buffer.set_start_state_column(
             column_name, column_value, idxs)
 
@@ -1034,7 +1049,8 @@ class ReplayBufferStateColumnWrapper(ReplayBuffer):
             column_name: str,
             idxs: List[int] = None) -> np.ndarray:
         if column_name not in self._state_columns:
-            raise ReplayBufferException(f'Column {column_name} it not visible.')
+            raise ReplayBufferException(
+                f'Column {column_name} it not visible.')
         return self._replay_buffer.get_next_state_column(column_name, idxs)
 
     def set_next_state_column(
@@ -1043,7 +1059,8 @@ class ReplayBufferStateColumnWrapper(ReplayBuffer):
             column_value: np.ndarray,
             idxs: List[int] = None):
         if column_name not in self._state_columns:
-            raise ReplayBufferException(f'Column {column_name} it not visible.')
+            raise ReplayBufferException(
+                f'Column {column_name} it not visible.')
         self._replay_buffer.set_next_state_column(
             column_name, column_name, idxs)
 
@@ -1059,7 +1076,7 @@ class ReplayBufferStateColumnWrapper(ReplayBuffer):
             if k not in self._state_columns:
                 raise ReplayBufferException(f'Column {k} it not visible.')
         self._replay_buffer.add_transition(state, transition, next_state)
-    
+
     def finish_current_sequence(self):
         self._replay_buffer.finish_current_sequence()
 

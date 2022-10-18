@@ -5,6 +5,7 @@
 #
 
 from abc import abstractmethod
+from typing import Dict, Any
 
 
 class Policy(object):
@@ -13,11 +14,13 @@ class Policy(object):
     '''
 
     @abstractmethod
-    def __call__(self, state):  # pragma: no cover
-        '''
-        Select an action at the given state.
+    def __call__(self, state: Dict[str, Any]) -> Any:  # pragma: no cover
+        """Select an action at the given state.
 
-        :param state: A state.
-        :return: The action the policy selects.
-        '''
+        Args:
+            state (Dict[str, Any]): State
+
+        Returns:
+            Any: Action
+        """
         pass

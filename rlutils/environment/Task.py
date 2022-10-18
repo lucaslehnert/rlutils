@@ -1,34 +1,11 @@
 import gym
-import numpy as np
 from abc import abstractmethod
-from typing import Dict, List
-from collections import namedtuple
-
-
-Column = namedtuple("Column", ["name", "shape", "dtype"])
-
-
-class TransitionSpec:
-    def __init__(
-            self,
-            state_columns: List[Column],
-            transition_columns: List[Column]):
-        self._state_columns = state_columns
-        self._transition_columns = transition_columns
-
-    @property
-    def state_columns(self):
-        return self._state_columns
-
-    @property
-    def transition_columns(self):
-        return self._transition_columns
-
+from .. import data
 
 class Task(gym.Env):
     @property
     @abstractmethod
-    def transition_spec(self) -> TransitionSpec:
+    def transition_spec(self) -> data.TransitionSpec:
         """Returns a transition specification object.
 
         Returns:

@@ -14,9 +14,10 @@ class ZeroValueAgent(ValueFunctionAgent):
     Implementation of an agent the uses a zero value function.
     """
 
-    def __init__(self, num_actions):
+    def __init__(self, num_actions: int):
         """
-        An agent that provides zero Q-values. This agent could be used for uniform random action selection.
+        An agent that provides zero Q-values. This agent could be used for 
+        uniform random action selection.
 
         :param num_actions: Number of actions to select from.
         """

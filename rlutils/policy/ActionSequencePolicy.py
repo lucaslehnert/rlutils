@@ -3,22 +3,24 @@
 #
 # This source code is licensed under an MIT license found in the LICENSE file in the root directory of this project.
 #
-
+from typing import Dict, Any, List
 from .Policy import Policy
 
 
 class ActionSequencePolicy(Policy):
     """
-    A policy which will follow the provided action sequence. ActionSequenceTimeoutException once all actions are
+    A policy which will follow the provided action sequence. 
+    ActionSequenceTimeoutException once all actions are
     executed.
     """
-    def __init__(self, action_sequence):
+    def __init__(self, action_sequence: List[Any]):
         self._action_sequence = action_sequence
         self._i = 0
 
-    def __call__(self, state):
+    def __call__(self, _: Dict[str, Any]) -> Any:
         if self._i >= len(self._action_sequence):
-            raise ActionSequenceTimeoutException('Ran out of actions to select from action sequence.')
+            raise ActionSequenceTimeoutException(
+                'Ran out of actions to select from action sequence.')
         act = self._action_sequence[self._i]
         self._i += 1
         return act

@@ -4,16 +4,20 @@
 # This source code is licensed under an MIT license found in the LICENSE file in the root directory of this project.
 #
 
+from typing import Callable, Optional, Tuple
 import numpy as np
 
 
-def vi(t_mat, r_vec,
-       gamma=.99,
-       eps=1e-5,
-       max_it=5000,
-       target_op=lambda q: np.max(q, axis=0),
-       q_init=None,
-       v_init=None):
+def vi(
+    t_mat: np.ndarray, 
+    r_vec: np.ndarray,
+    gamma: float=.99,
+    eps: float=1e-5,
+    max_it: int=5000,
+    target_op: Callable[[np.ndarray], np.ndarray]=lambda q: np.max(q, axis=0),
+    q_init: Optional[np.ndarray]=None,
+    v_init: Optional[np.ndarray]=None
+) -> Tuple[np.ndarray, np.ndarray]:
     """
     Implementation of value iteration.
 

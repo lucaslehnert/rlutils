@@ -4,10 +4,9 @@
 # This source code is licensed under an MIT license found in the LICENSE file 
 # in the root directory of this project.
 #
-
 import numpy as np
 
-from .Task import TransitionSpec, Column
+from ..data import TransitionSpec, Column
 from .TabularMDP import TabularMDP
 from .gridworld import generate_gridworld_transition_function
 from .gridworld import generate_mdp_from_transition_and_reward_function
@@ -19,7 +18,7 @@ class PuddleWorld(TabularMDP):
     X = 'x'
     Y = 'y'
 
-    def __init__(self, slip_prob=0.05, dtype=np.float32):
+    def __init__(self, slip_prob: float=0.05):
         start = (0, 0)
         goal = (0, 9)
 
@@ -38,7 +37,7 @@ class PuddleWorld(TabularMDP):
             return goal_rew + puddle_penalty
 
         t_mat, r_mat = generate_mdp_from_transition_and_reward_function(
-            100, 4, t_fn, r_fn, reward_matrix=True, dtype=dtype
+            100, 4, t_fn, r_fn, reward_matrix=True
         )
         super().__init__(
             t_mat, 

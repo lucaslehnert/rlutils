@@ -7,27 +7,29 @@
 import numpy as np
 
 from .VariableSchedule import VariableSchedule
+from typing import List, Union
 
 
 class LinearInterpolatedVariableSchedule(VariableSchedule):
     """
-    LinearInterpolatedVariableSchedule implements a variable schedule that interpolates values linearly between
-    boundary points that are passed into the constructor.
+    LinearInterpolatedVariableSchedule implements a variable schedule that 
+    interpolates values linearly between boundary points that are passed into 
+    the constructor.
     """
 
-    def __init__(self, t_list, v_list):
-        """
-        Piecewise Linear interpolated schedule. The value of the schedule is linearly interpolated between the start
-        value of each interval and the start value of the next interval.
+    def __init__(self, t_list: List[int], v_list: List[Union[int, float]]):
+        """Piecewise Linear interpolated schedule. The value of the schedule is 
+        linearly interpolated between the start value of each interval and the 
+        start value of the next interval.
 
-        :param t_list: Start boundaries of each interval. The values must be strictly increasing.
-        :param v_list: Start value of each interval. Each value in this list corresponds to the start value specified in
-            t_list.
+        Args:
+            t_list (List[int]): Interval boundaries.
+            v_list (List[Union[int, float]]): Values at boundaries.
         """
         self._t_list = np.array(t_list)
         self._v_list = np.array(v_list)
 
-    def __call__(self, t):
+    def __call__(self, t: int) -> Union[int, float]:
         if len(np.where(self._t_list > t)[0]) == 0:
             return self._v_list[-1]
 
@@ -41,8 +43,10 @@ class LinearInterpolatedVariableSchedule(VariableSchedule):
 
         return v_low * (1. - (t - t_low) / (t_high - t_low)) + v_high * (t - t_low) / (t_high - t_low)
 
-    def get_t_list(self):
-        return self._t_list
+    @property
+    def t_list(self) -> List[int]:
+        return self._t_list.tolist()
 
-    def get_v_list(self):
-        return self._v_list
+    @property
+    def v_list(self) -> List[Union[int, float]]:
+        return self._v_list.tolist()

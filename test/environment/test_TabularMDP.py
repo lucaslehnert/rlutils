@@ -63,15 +63,15 @@ class TestPersistenceTabularMDP(unittest.TestCase):
         mdp = rl.environment.PuddleWorld()
         transition_defaults = mdp.transition_defaults()
         self.assertTrue(np.allclose(
-            transition_defaults[rl.data.ACTION],
+            transition_defaults[rl.data.Action],
             np.int32(-1)
         ))
         self.assertTrue(np.allclose(
-            transition_defaults[rl.data.REWARD],
+            transition_defaults[rl.data.Reward],
             np.float32(0.)
         ))
         self.assertTrue(np.allclose(
-            transition_defaults[rl.data.TERM],
+            transition_defaults[rl.data.Term],
             False
         ))
 

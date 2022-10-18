@@ -5,7 +5,7 @@
 #
 
 from rlutils.environment.TabularMDP import TabularMDP
-from rlutils.data.replaybuffer import REWARD, TERM
+from rlutils.data.replaybuffer import Reward, Term
 from rlutils.environment.PuddleWorld import PuddleWorld
 from rlutils import data, environment
 from unittest import TestCase
@@ -56,9 +56,9 @@ class TestSimulate(TestCase):
                 rl.environment.PuddleWorld.Y: np.int32(0)
             },
             transition_defaults={
-                rl.data.ACTION: np.int32(0),
-                rl.data.REWARD: np.float32(0.),
-                rl.data.TERM: False
+                rl.data.Action: np.int32(0),
+                rl.data.Reward: np.float32(0.),
+                rl.data.Term: False
             }
         )
         logger = rl.logging.LoggerTrajectory(buffer)
@@ -84,14 +84,14 @@ class TestSimulate(TestCase):
         self.assertEqual(buffer.num_transitions(), 12)
         self.assertEqual(buffer.num_states(), 13)
         
-        r_seq = buffer.get_column(rl.data.REWARD)
+        r_seq = buffer.get_column(rl.data.Reward)
         r_seq_corr = np.array(
             [0.,  0., -1., -1., -1., -1., -1., -1., -1.,  0.,  0.,  1.], 
             dtype=np.float32
         )
         self.assertTrue(np.all(r_seq == r_seq_corr))
 
-        a_seq = buffer.get_column(rl.data.ACTION)
+        a_seq = buffer.get_column(rl.data.Action)
         self.assertTrue(np.all(a_seq == np.array(action_seq, dtype=np.int32)))
 
         x_seq = buffer.get_state_column(rl.environment.PuddleWorld.X)
@@ -128,9 +128,9 @@ class TestSimulate(TestCase):
                 rl.environment.PuddleWorld.Y: np.int32(0)
             },
             transition_defaults={
-                rl.data.ACTION: np.int32(0),
-                rl.data.REWARD: np.float32(0.),
-                rl.data.TERM: False
+                rl.data.Action: np.int32(0),
+                rl.data.Reward: np.float32(0.),
+                rl.data.Term: False
             }
         )
         logger = rl.logging.LoggerTrajectory(buffer)

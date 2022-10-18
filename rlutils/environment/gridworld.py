@@ -3,12 +3,16 @@
 #
 # This source code is licensed under an MIT license found in the LICENSE file in the root directory of this project.
 #
-
+from typing import Callable, List, Optional, Tuple
 import numpy as np
 
 
-def generate_transition_matrix_from_function(num_states, num_actions, transition_fn, dtype=np.float64):
-    t_mat = np.zeros([num_actions, num_states, num_states], dtype=dtype)
+def generate_transition_matrix_from_function(
+    num_states: int,
+    num_actions: int,
+    transition_fn: Callable[[int, int, int], float]
+) -> np.ndarray:
+    t_mat = np.zeros([num_actions, num_states, num_states], dtype=np.float32)
 
     for a in range(num_actions):
         for s_1 in range(num_states):
@@ -20,11 +24,17 @@ def generate_transition_matrix_from_function(num_states, num_actions, transition
 generate_reward_matrix_from_function = generate_transition_matrix_from_function
 
 
-def generate_mdp_from_transition_and_reward_function(num_states, num_actions, transition_fn, reward_fn,
-                                                     reward_matrix=False,
-                                                     dtype=np.float64):
-    t_mat = generate_transition_matrix_from_function(num_states, num_actions, transition_fn, dtype=dtype)
-    r_mat = generate_reward_matrix_from_function(num_states, num_actions, reward_fn, dtype=dtype)
+def generate_mdp_from_transition_and_reward_function(
+    num_states: int,
+    num_actions: int,
+    transition_fn: Callable[[int, int, int], float],
+    reward_fn: Callable[[int, int, int], float],
+    reward_matrix: bool = False
+) -> Tuple[np.ndarray, np.ndarray]:
+    t_mat = generate_transition_matrix_from_function(
+        num_states, num_actions, transition_fn)
+    r_mat = generate_reward_matrix_from_function(
+        num_states, num_actions, reward_fn)
 
     if reward_matrix:
         return t_mat, r_mat
@@ -33,7 +43,11 @@ def generate_mdp_from_transition_and_reward_function(num_states, num_actions, tr
         return t_mat, r_vec
 
 
-def add_terminal_states(t_mat, r_mat, term_state_mask):
+def add_terminal_states(
+    t_mat: np.ndarray,
+    r_mat: np.ndarray,
+    term_state_mask: np.ndarray
+) -> Tuple[np.ndarray, np.ndarray]:
     num_actions, num_states, _ = np.shape(t_mat)
     for i, t in enumerate(term_state_mask):
         for a in range(num_actions):
@@ -44,14 +58,14 @@ def add_terminal_states(t_mat, r_mat, term_state_mask):
     return t_mat, r_mat
 
 
-def idx_to_pt(i, shape):
+def idx_to_pt(i: int, shape: Tuple[int, int]) -> Tuple[int, int]:
     w, h = shape
     y = np.floor(i / w).astype(np.int32)
     x = i - y * w
     return x, y
 
 
-def pt_to_idx(pt, shape):
+def pt_to_idx(pt: Tuple[int, int], shape: Tuple[int, int]) -> int:
     w, h = shape
     x, y = pt
     return y * w + x
@@ -64,15 +78,22 @@ class GridWorldAction:
     LEFT = 3
 
 
-def generate_gridworld_transition_function(size_x, size_y, slip_prob=0.):
-    '''
-    Returns a grid world transition function. The origin of the coordinate system is in the top-left corner.
+def generate_gridworld_transition_function(
+    size_x: int,
+    size_y: int,
+    slip_prob: float = 0.
+) -> Callable[[int, int, int], float]:
+    """Returns a grid world transition function. The origin of the coordinate 
+    system is in the top-left corner.
 
-    :param size_x:
-    :param size_y:
-    :param slip_prob:
-    :return:
-    '''
+    Args:
+        size_x (int): Number of columns.
+        size_y (int): Number of rows.
+        slip_prob (float, optional): Slip probability. Defaults to 0..
+
+    Returns:
+        Callable[[int, int, int], float]: Transition function.
+    """
 
     def t_fn(s, a, s_next):
         nonlocal size_x, size_y, slip_prob
@@ -106,10 +127,18 @@ def generate_gridworld_transition_function(size_x, size_y, slip_prob=0.):
     return t_fn
 
 
-def generate_gridworld_transition_function_with_barrier(size_x, size_y, slip_prob=0., barrier_idx_list=[]):
+def generate_gridworld_transition_function_with_barrier(
+    size_x: int,
+    size_y: int,
+    slip_prob: float = 0.,
+    barrier_idx_list: Optional[List[Tuple[int, int]]] = None
+) -> Callable[[int, int, int], float]:
+    if barrier_idx_list is None:
+        barrier_idx_list = []
     t_fn = generate_gridworld_transition_function(size_x, size_y, slip_prob)
 
-    across_barrier = lambda s1, s2: (s1, s2) in barrier_idx_list or (s2, s1) in barrier_idx_list
+    def across_barrier(s1, s2): return (s1, s2) in barrier_idx_list \
+        or (s2, s1) in barrier_idx_list
 
     def other_side_states(s):
         nonlocal barrier_idx_list
@@ -124,9 +153,11 @@ def generate_gridworld_transition_function_with_barrier(size_x, size_y, slip_pro
 
     def t_fn_barrier(s, a, s_next):
         nonlocal t_fn, barrier_idx_list
+
+        mask = np.any([t_fn(s, a, s_o) > 0. for s_o in other_side_states(s)])
         if across_barrier(s, s_next):
             return 0.
-        elif s == s_next and np.any([t_fn(s, a, s_o) > 0. for s_o in other_side_states(s)]):
+        elif s == s_next and mask:
             return 1.
         else:
             return t_fn(s, a, s_next)
