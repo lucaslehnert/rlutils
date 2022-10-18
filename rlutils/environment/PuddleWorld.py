@@ -7,6 +7,7 @@
 
 import numpy as np
 
+from .Task import TransitionSpec, Column
 from .TabularMDP import TabularMDP
 from .gridworld import generate_gridworld_transition_function
 from .gridworld import generate_mdp_from_transition_and_reward_function
@@ -54,7 +55,19 @@ class PuddleWorld(TabularMDP):
         s[PuddleWorld.Y] = y
         return s
 
-    def state_defaults(self) -> Dict[str, np.ndarray]:
-        sd = super().state_defaults()
-        return {**sd, PuddleWorld.X: -1, PuddleWorld.Y: -1}
+    def transition_spec(self) -> TransitionSpec:
+        tab_spec = super().transition_spec
+        return TransitionSpec(
+            state_columns=[
+                Column(PuddleWorld.X, shape=(), dtype=int),
+                Column(PuddleWorld.Y, shape=(), dtype=int),
+                *tab_spec.state_columns
+            ],
+            transition_columns=tab_spec.transition_columns
+        )
+
+    # def state_defaults(self) -> Dict[str, np.ndarray]:
+    #     sd = super().state_defaults()
+    #     return {**sd, PuddleWorld.X: -1, PuddleWorld.Y: -1}
+
 

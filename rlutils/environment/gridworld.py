@@ -78,6 +78,8 @@ def generate_gridworld_transition_function(size_x, size_y, slip_prob=0.):
         nonlocal size_x, size_y, slip_prob
         x, y = idx_to_pt(s, (size_x, size_y))
 
+        x_next: int = 0
+        y_next: int = 0
         if a == GridWorldAction.UP:
             x_next = x
             y_next = max(y - 1, 0)

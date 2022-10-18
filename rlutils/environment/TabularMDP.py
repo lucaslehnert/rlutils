@@ -12,7 +12,7 @@ import yaml
 from typing import List, Tuple
 from rlutils.utils import one_hot
 from .gridworld import add_terminal_states
-from .Task import Task
+from .Task import Task, TransitionSpec, Column
 from typing import Dict
 from ..data import ACTION, REWARD, TERM
 
@@ -51,18 +51,35 @@ class TabularMDP(Task):
     def goal_state_list(self) -> np.ndarray:
         return np.array(self._idx_goal_list, copy=True)
 
-    def state_defaults(self) -> Dict[str, np.ndarray]:
-        return {
-            TabularMDP.ONE_HOT: np.zeros(self.num_states(), dtype=np.float32),
-            TabularMDP.IDX: np.int32(-1)
-        }
+    def transition_spec(self) -> TransitionSpec:
+        return TransitionSpec(
+            state_columns=[
+                Column(
+                    TabularMDP.ONE_HOT, 
+                    shape=(self.num_states,), 
+                    dtype=np.float32
+                ),
+                Column(TabularMDP.IDX, shape=(), dtype=float)
+            ],
+            transition_columns=[
+                Column(ACTION, shape=(), dtype=int),
+                Column(REWARD, shape=(), dtype=float),
+                Column(TERM, shape=(), dtype=bool)
+            ]
+        )
+
+    # def state_defaults(self) -> Dict[str, np.ndarray]:
+    #     return {
+    #         TabularMDP.ONE_HOT: np.zeros(self.num_states(), dtype=np.float32),
+    #         TabularMDP.IDX: np.int32(-1)
+    #     }
         
-    def transition_defaults(self) -> Dict[str, np.ndarray]:
-        return {
-            ACTION: np.int32(-1),
-            REWARD: np.float32(0),
-            TERM: False
-        }
+    # def transition_defaults(self) -> Dict[str, np.ndarray]:
+    #     return {
+    #         ACTION: np.int32(-1),
+    #         REWARD: np.float32(0),
+    #         TERM: False
+    #     }
 
     def _idx_to_state(self, i):
         _, n, _ = np.shape(self._t_mat)
@@ -118,9 +135,11 @@ class TabularMDP(Task):
     def render(self, mode='human', close='False'):  # pragma: no cover
         pass
 
+    @property
     def num_states(self) -> int:
         return np.shape(self._t_mat)[1]
 
+    @property
     def num_actions(self) -> int:
         return np.shape(self._t_mat)[0]
 
@@ -159,8 +178,8 @@ class TabularMDP(Task):
         with open(meta_filename, 'w') as f:
             yaml.dump(mdp_dict, f, default_flow_style=False)
 
-    @classmethod
-    def load_from_file(self, meta_filename: str):
+    @staticmethod
+    def load_from_file(meta_filename: str):
         """Load MDP from file.
 
         Args:
