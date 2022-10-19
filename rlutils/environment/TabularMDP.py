@@ -7,11 +7,11 @@ import os
 import numpy as np
 import yaml
 
-from typing import List, Tuple
-from rlutils.utils import one_hot
+from typing import List, Tuple, Dict, Any, Optional
+from ..utils import one_hot
+from ..types import TransitionSpec, Column, action_index_column, reward_column, term_column
 from .gridworld import add_terminal_states
 from .Task import Task
-from ..data import TransitionSpec, Column, action_index_column, reward_column, term_column
 
 
 class TabularMDP(Task):
@@ -24,6 +24,7 @@ class TabularMDP(Task):
             r_mat: np.ndarray,
             idx_start_list: List[int],
             idx_goal_list: List[int],
+            max_steps: int = 5000,
             name: str = 'TabularMDP'):
         num_states = np.shape(t_mat)[1]
         term_state_mask = np.array(
@@ -38,9 +39,14 @@ class TabularMDP(Task):
         self._idx_goal_list = idx_goal_list
 
         self._s = self._idx_to_state(np.random.choice(self._idx_start_list))
-        num_actions, _, _ = np.shape(self._t_mat)
-
+        
         self._name = name
+        self._max_steps = max_steps
+        self._current_episode_steps = 0
+    
+    @property
+    def max_steps(self) -> int:
+        return self._max_steps
 
     def start_state_list(self) -> np.ndarray:
         return np.array(self._idx_start_list, copy=True)
@@ -100,23 +106,33 @@ class TabularMDP(Task):
         }
         return self._augment_state_dict(state_dict)
 
-    def reset(self, idx_start=None) -> dict:
-        if idx_start is None:
-            idx_start = np.random.choice(self._idx_start_list)
-        self._s = self._idx_to_state(idx_start)
-        return self._wrap_in_state_dict(np.copy(self._s))
+    def reset(
+        self, 
+        *,
+        start_idx: Optional[int]=None,
+        **_: Any
+    ) -> Tuple[Dict[str, Any], dict]:
+        self._current_episode_steps = 0
+        if start_idx is None:
+            start_idx = np.random.choice(self._idx_start_list)
+        self._s = self._idx_to_state(start_idx)
+        return self._wrap_in_state_dict(np.copy(self._s)), {}
 
-    def step(self, action: int) -> Tuple[dict, float, bool, dict]:
+    def step(
+        self, 
+        action: int
+    ) -> Tuple[Dict[str, Any], float, bool, bool, dict]:
+        assert self._current_episode_steps < self._max_steps
+        self._current_episode_steps += 1
         s_prob = np.matmul(self._s, self._t_mat[action])
-        s_ind_next = np.random.choice(np.arange(len(s_prob)), p=s_prob)
+        s_ind_next: np.int32 = np.random.choice(
+            np.arange(len(s_prob)), p=s_prob)
         r = np.matmul(self._s, self._r_mat[action])[s_ind_next]
         self._s *= 0
         self._s[s_ind_next] = 1.
-        if self._state_to_idx(self._s) in self._idx_goal_list:
-            done = True
-        else:
-            done = False
-        return self._wrap_in_state_dict(np.copy(self._s)), r, done, {}
+        done = self._state_to_idx(self._s) in self._idx_goal_list
+        trunc = self._current_episode_steps >= self._max_steps
+        return self._wrap_in_state_dict(np.copy(self._s)), r, done, trunc, {}
 
     def get_t_mat_r_mat(self) -> Tuple[np.ndarray, np.ndarray]:
         return np.copy(self._t_mat), np.copy(self._r_mat)

@@ -13,7 +13,7 @@ class TestSimulate(TestCase):
         import numpy as np
         logger = rl.logging.LoggerEpisodeLength()
         for _ in range(5):
-            mdp = rl.environment.PuddleWorld(slip_prob=0.)
+            mdp = rl.environment.PuddleWorld(slip_prob=0., max_steps=10)
             policy = rl.policy.ActionSequencePolicy([
                 rl.environment.gridworld.GridWorldAction.down,
                 rl.environment.gridworld.GridWorldAction.right,
@@ -26,7 +26,7 @@ class TestSimulate(TestCase):
                 rl.environment.gridworld.GridWorldAction.down,
                 rl.environment.gridworld.GridWorldAction.down
             ])
-            rl.data.simulate(mdp, policy, logger, max_steps=10)
+            rl.data.simulate(mdp, policy, logger)
         self.assertTrue(np.all(logger.get_episode_length() == np.ones(5) * 10))
 
     def _traj_equal(self, traj_1, traj_2):
@@ -43,7 +43,7 @@ class TestSimulate(TestCase):
         import numpy as np
 
 
-        mdp = rl.environment.PuddleWorld(slip_prob=0.)
+        mdp = rl.environment.PuddleWorld(slip_prob=0., max_steps=10)
         buffer = rl.data.TrajectoryBuffer(mdp.transition_spec)
         logger = rl.logging.LoggerTrajectory(buffer)
 
@@ -68,14 +68,14 @@ class TestSimulate(TestCase):
         self.assertEqual(buffer.num_transitions, 12)
         self.assertEqual(buffer.num_states, 13)
         
-        r_seq = buffer.get_transition_column(rl.data.Reward)
+        r_seq = buffer.get_transition_column(rl.Reward)
         r_seq_corr = np.array(
             [0.,  0., -1., -1., -1., -1., -1., -1., -1.,  0.,  0.,  1.], 
             dtype=np.float32
         )
         self.assertTrue(np.all(r_seq == r_seq_corr))
 
-        a_seq = buffer.get_transition_column(rl.data.Action)
+        a_seq = buffer.get_transition_column(rl.Action)
         self.assertTrue(np.all(a_seq == np.array(action_seq, dtype=np.int32)))
 
         x_seq = buffer.get_state_column(rl.environment.PuddleWorld.X)
@@ -103,14 +103,14 @@ class TestSimulate(TestCase):
         import rlutils as rl
         import numpy as np
 
-        mdp = rl.environment.PuddleWorld(slip_prob=0.)
+        mdp = rl.environment.PuddleWorld(slip_prob=0., max_steps=3)
         buffer = rl.data.TrajectoryBuffer(mdp.transition_spec)
         logger = rl.logging.LoggerTrajectory(buffer)
 
-        mdp = rl.environment.PuddleWorld(slip_prob=0.)
+        mdp = rl.environment.PuddleWorld(slip_prob=0., max_steps=3)
         policy = rl.policy.ActionSequencePolicy(
-            [rl.environment.gridworld.GridWorldAction.up] * 101
+            [rl.environment.gridworld.GridWorldAction.up] * 3
         )
-        rl.data.simulate(mdp, policy, logger, max_steps=100)
-        self.assertEqual(buffer.num_transitions, 100)
-        self.assertEqual(buffer.num_states, 101)
+        rl.data.simulate(mdp, policy, logger)
+        self.assertEqual(buffer.num_transitions, 3)
+        self.assertEqual(buffer.num_states, 4)

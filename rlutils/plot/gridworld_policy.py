@@ -6,7 +6,7 @@
 
 import numpy as np
 import rlutils as rl
-import plotly.graph_objects as go
+import plotly.graph_objects as go # type: ignore
 from itertools import product
 
 from .utils import get_shape_up, get_shape_right, get_shape_down, get_shape_left

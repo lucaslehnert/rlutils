@@ -6,8 +6,9 @@
 
 import numpy as np
 from typing import Dict, Any
+
 from .ValuePolicy import ValuePolicy
-from ..agent import Agent
+from ..types import Agent
 
 
 class EGreedyPolicy(ValuePolicy):
@@ -23,7 +24,7 @@ class EGreedyPolicy(ValuePolicy):
         :param agent: Agent this policy uses to select actions.
         :param eps: Epsilon parameter.
         """
-        self._agent = agent
+        super().__init__(agent)
         assert 0. <= eps <= 1.
         self._eps = eps
     

@@ -6,7 +6,7 @@
 
 import random
 from typing import Dict, Any
-from .Policy import Policy
+from ..types import Policy
 
 
 class UniformRandomPolicy(Policy):

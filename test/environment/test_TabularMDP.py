@@ -51,9 +51,9 @@ class TestPersistenceTabularMDP(unittest.TestCase):
 
         col_names = set(col.name for col in transition_spec.transition_columns)
         correct_col_names = set([
-            rl.data.Action,
-            rl.data.Reward,
-            rl.data.Term
+            rl.Action,
+            rl.Reward,
+            rl.Term
         ])
         self.assertSetEqual(col_names, correct_col_names)
 

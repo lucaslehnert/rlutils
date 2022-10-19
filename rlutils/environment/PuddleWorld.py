@@ -6,19 +6,19 @@
 #
 import numpy as np
 
-from ..data import TransitionSpec, Column
+from ..types import TransitionSpec, Column
 from .TabularMDP import TabularMDP
 from .gridworld import generate_gridworld_transition_function
 from .gridworld import generate_mdp_from_transition_and_reward_function
 from .gridworld import pt_to_idx, idx_to_pt
-from typing import Dict
+from typing import Any
 
 
 class PuddleWorld(TabularMDP):
     X = 'x'
     Y = 'y'
 
-    def __init__(self, slip_prob: float=0.05):
+    def __init__(self, slip_prob: float=0.05, **kvargs: Any):
         start = (0, 0)
         goal = (0, 9)
 
@@ -44,6 +44,7 @@ class PuddleWorld(TabularMDP):
             r_mat, 
             [pt_to_idx(start, (10, 10))], 
             [pt_to_idx(goal, (10, 10))], 
+            **kvargs,
             name='PuddleWorld'
         )
 

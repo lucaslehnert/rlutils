@@ -6,8 +6,8 @@
 
 import numpy as np
 import rlutils as rl
-import plotly
-import plotly.graph_objects as go
+import plotly  # type: ignore
+import plotly.graph_objects as go # type: ignore
 from itertools import product
 
 from .ColorMap import ColorMap

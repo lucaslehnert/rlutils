@@ -6,8 +6,7 @@
 
 import numpy as np
 from abc import abstractmethod
-from .Policy import Policy
-from ..agent import Agent
+from ..types import Policy, Agent
 from typing import Dict, Any
 
 

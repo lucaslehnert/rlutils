@@ -6,7 +6,7 @@
 
 import numpy as np
 from typing import Optional, Dict, Any, Union
-from .Agent import Agent
+from ..types import Agent
 
 
 class QLearning(Agent):

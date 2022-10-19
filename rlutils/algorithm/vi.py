@@ -51,7 +51,7 @@ def vi(
             q[a] = r_vec[a] + gamma * np.matmul(t_mat[a], v)
 
         v_next = target_op(q)
-        td_error = np.linalg.norm(v_next - v, ord=np.inf)
+        td_error = np.linalg.norm(v_next - v, ord=np.inf) # type: ignore
         converged = td_error < eps
         v = v_next
         it += 1

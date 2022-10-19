@@ -8,14 +8,13 @@ import random
 import time
 from abc import abstractmethod
 from datetime import timedelta
-from typing import Callable, Any
-
+from typing import Callable
 import numpy as np
 
 
 def set_seeds(seed: int):
     """
-    Shorthand for setting random number seeds for the libraries numpy and random.
+    Setting random number seeds for the libraries numpy and random.
 
     :param seed:
     :return:
@@ -55,7 +54,8 @@ class Experiment:
         t_start = time.time()
         self._run_experiment()
         self._duration_sec = time.time() - t_start
-        print('{} finished, duration: {:0>8}'.format(self.get_class_name(), str(timedelta(seconds=self._duration_sec))))
+        print('{} finished, duration: {:0>8}'.format(
+            self.get_class_name(), str(timedelta(seconds=self._duration_sec))))
 
     @abstractmethod
     def _run_experiment(self):  # pragma: no cover
@@ -76,8 +76,7 @@ class Experiment:
         :param save_dir: Directory into which experiment is persisted.
         :return: An instance of Experiment.
         """
-        raise NotImplemented(
-            'load_experiment must be implemented by a subclass.')
+        raise NotImplementedError
 
     @classmethod
     def get_class_name(cls):  # pragma: no cover
@@ -93,8 +92,8 @@ class ExperimentException(Exception):  # pragma: no cover
 
 
 def repeat_function_with_ndarray_return(
-    func: Callable[..., np.ndarray], 
-    repeats: int=20
+    func: Callable[..., np.ndarray],
+    repeats: int = 20
 ) -> Callable[..., np.ndarray]:
     """Function decorator that repeats a function that returns a numpy array. 
     The returned numpy arrays are stacked and the stacked array is returned.
@@ -111,3 +110,4 @@ def repeat_function_with_ndarray_return(
         return np.array([func(*params, **kwargs) for _ in range(repeats)])
 
     return func_rep
+

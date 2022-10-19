@@ -13,7 +13,7 @@ class TestLoggerEpisodeLength(TestCase):
         import numpy as np
         logger = rl.logging.LoggerEpisodeLength()
         for _ in range(5):
-            mdp = rl.environment.PuddleWorld(slip_prob=0.)
+            mdp = rl.environment.PuddleWorld(slip_prob=0., max_steps=12)
             policy = rl.policy.ActionSequencePolicy([
                 rl.environment.gridworld.GridWorldAction.down,
                 rl.environment.gridworld.GridWorldAction.right,
@@ -36,7 +36,7 @@ class TestLoggerEpisodeLength(TestCase):
         import numpy as np
         logger = rl.logging.LoggerEpisodeLength()
         for _ in range(5):
-            mdp = rl.environment.PuddleWorld(slip_prob=0.)
+            mdp = rl.environment.PuddleWorld(slip_prob=0., max_steps=10)
             policy = rl.policy.ActionSequencePolicy([
                 rl.environment.gridworld.GridWorldAction.down,
                 rl.environment.gridworld.GridWorldAction.right,
@@ -50,7 +50,7 @@ class TestLoggerEpisodeLength(TestCase):
                 rl.environment.gridworld.GridWorldAction.down
             ])
             try:
-                rl.data.simulate(mdp, policy, logger, max_steps=10)
+                rl.data.simulate(mdp, policy, logger)
             except rl.data.SimulationTimeout:
                 logger.on_simulation_timeout()
         self.assertTrue(np.all(logger.get_episode_length() == np.ones(5) * 10))
@@ -60,7 +60,7 @@ class TestLoggerEpisodeLength(TestCase):
         import numpy as np
         logger = rl.logging.LoggerEpisodeLength()
         for _ in range(5):
-            mdp = rl.environment.PuddleWorld(slip_prob=0.)
+            mdp = rl.environment.PuddleWorld(slip_prob=0., max_steps=10)
             policy = rl.policy.ActionSequencePolicy([
                 rl.environment.gridworld.GridWorldAction.down,
                 rl.environment.gridworld.GridWorldAction.right,
@@ -73,8 +73,5 @@ class TestLoggerEpisodeLength(TestCase):
                 rl.environment.gridworld.GridWorldAction.down,
                 rl.environment.gridworld.GridWorldAction.down
             ])
-            try:
-                rl.data.simulate(mdp, policy, logger, max_steps=10)
-            except rl.data.SimulationTimeout:
-                logger.update_episode_length(10)
+            rl.data.simulate(mdp, policy, logger)
         self.assertTrue(np.all(logger.get_episode_length() == np.ones(5) * 10))

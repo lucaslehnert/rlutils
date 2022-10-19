@@ -6,7 +6,7 @@
 
 import numpy as np
 from typing import Callable, Dict, Any
-from .Agent import Agent
+from ..types import Agent
 
 
 class ValueFunctionAgent(Agent):

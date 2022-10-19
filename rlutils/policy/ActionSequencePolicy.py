@@ -4,7 +4,7 @@
 # This source code is licensed under an MIT license found in the LICENSE file in the root directory of this project.
 #
 from typing import Dict, Any, List
-from .Policy import Policy
+from ..types import Policy
 
 
 class ActionSequencePolicy(Policy):

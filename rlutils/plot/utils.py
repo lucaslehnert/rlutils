@@ -4,7 +4,7 @@
 # This source code is licensed under an MIT license found in the LICENSE file in the root directory of this project.
 #
 
-import plotly.graph_objects as go
+import plotly.graph_objects as go # type: ignore
 
 
 def get_shape_up(x, y, color):  # pragma: no cover
