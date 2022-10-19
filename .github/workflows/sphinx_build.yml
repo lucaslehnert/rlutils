@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.7, 3.8, 3.9]
+        python-version: ["3.7", "3.8", "3.9", "3.10"]
 
     steps:
     - uses: actions/checkout@v2
@@ -32,7 +32,7 @@ jobs:
           libsmpeg-dev libsdl1.2-dev libportmidi-dev libswscale-dev \
           libavformat-dev libavcodec-dev libfreetype6-dev pandoc
         python -m pip install --upgrade pip
-        pip install Sphinx==3.5.2 sphinx-rtd-theme==0.5.1 nbsphinx pandoc
+        pip install Sphinx>=3.5.2 sphinx-rtd-theme==0.5.1 nbsphinx pandoc
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Make sphinx docs.
       run: |

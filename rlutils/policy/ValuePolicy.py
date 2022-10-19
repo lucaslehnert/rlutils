@@ -4,15 +4,17 @@
 # This source code is licensed under an MIT license found in the LICENSE file in the root directory of this project.
 #
 
+import numpy as np
 from abc import abstractmethod
+from ..types import Policy, Agent
+from typing import Dict, Any
 
-from .Policy import Policy
-from ..agent.Agent import Agent
 
 
 class ValuePolicy(Policy):
     """
-    Base class for all policies that select actions using an agent's Q-values. A finite number of actions is assumed.
+    Base class for all policies that select actions using an agent's Q-values. A
+    finite number of actions is assumed.
 
     To implement a policy, sub-classes implement the method _select_action.
     """
@@ -26,20 +28,25 @@ class ValuePolicy(Policy):
         self._agent = agent
 
     @abstractmethod
-    def _select_action(self, state, q_values):  # pragma: no cover
-        """
-        Method implemented by sub-classes that implement a specific policy.
+    def _select_action(
+        self, 
+        state: Dict[str, Any], 
+        q_values: np.ndarray
+    ) -> Any:  # pragma: no cover
+        """Method implemented by sub-classes that implement a specific policy.
 
-        :param state: State at which action should be selected.
-        :param q_values: Q-value array at state for each action.
-        :return: Selected action.
-        """
-        raise NotImplementedError('select_action needs to be implemented by a subclass.')
+        Args:
+            state (Dict[str, Any]): _description_
+            q_values (np.ndarray): _description_
 
-    def __call__(self, state):
-        """
+        Raises:
+            NotImplementedError: _description_
 
-        :param state: State for which action should be selected.
-        :return: Action that is selected at the given state.
+        Returns:
+            Any: _description_
         """
+        raise NotImplementedError(
+            'select_action needs to be implemented by a subclass.')
+
+    def __call__(self, state: Dict[str, Any]) -> Any:
         return self._select_action(state, self._agent.q_values(state))

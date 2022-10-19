@@ -22,10 +22,12 @@ class TestUtils(unittest.TestCase):
     def test_repeat_function_with_ndarray_return(self):
         import rlutils as rl
         import numpy as np
-        ar_stack = rl.repeat_function_with_ndarray_return(lambda: np.ones(3, dtype=np.float32), 20, dtype=np.float32)
+        ar_stack = rl.repeat_function_with_ndarray_return(
+            lambda: np.ones(3, dtype=np.float32), 20)
         self.assertEqual(ar_stack().dtype, np.float32)
         self.assertTrue(np.all(ar_stack() == np.ones([20, 3], dtype=np.float32)))
-        ar_stack = rl.repeat_function_with_ndarray_return(lambda: np.ones(3, dtype=np.int32), 4, dtype=np.int32)
+        ar_stack = rl.repeat_function_with_ndarray_return(
+            lambda: np.ones(3, dtype=np.int32), 4)
         self.assertEqual(ar_stack().dtype, np.int32)
         self.assertTrue(np.all(ar_stack() == np.ones([4, 3], dtype=np.int32)))
 

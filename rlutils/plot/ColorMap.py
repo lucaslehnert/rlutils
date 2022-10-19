@@ -5,7 +5,7 @@
 #
 
 import numpy as np
-import colorlover as cl
+import colorlover as cl # type: ignore
 
 
 class ColorMap(object):  # pragma: no cover

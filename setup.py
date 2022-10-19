@@ -15,9 +15,9 @@ with open("requirements.txt", 'r') as fr:
 
 setuptools.setup(
     name="rlutils",
-    version="0.0.2",
+    version="0.0.3",
     author="The rlutils authors",
-    author_email="lucas_lehnert@brown.edu",
+    author_email="lucas.lehnert@mila.quebec",
     description="rlutils: A utility package for implementing reinforcement learning simulations.",
     long_description=long_description,
     long_description_content_type="text/markdown",

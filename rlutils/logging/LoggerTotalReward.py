@@ -5,7 +5,7 @@
 #
 
 import numpy as np
-from rlutils.data import TransitionListener
+from ..types import TransitionListener
 
 
 class LoggerTotalReward(TransitionListener):

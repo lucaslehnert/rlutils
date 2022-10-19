@@ -17,8 +17,8 @@ class TestLinearInterpolatedVariableSchedule(TestCase):
         self.assertEqual(schedule(.75), .75)
         self.assertEqual(schedule(.25), .25)
         self.assertEqual(schedule(2), 1.)
-        self.assertEqual(schedule.get_t_list()[0], 0)
-        self.assertEqual(schedule.get_t_list()[1], 1)
-        self.assertEqual(schedule.get_v_list()[0], 0)
-        self.assertEqual(schedule.get_v_list()[1], 1)
+        self.assertEqual(schedule.t_list[0], 0)
+        self.assertEqual(schedule.t_list[1], 1)
+        self.assertEqual(schedule.v_list[0], 0)
+        self.assertEqual(schedule.v_list[1], 1)
         

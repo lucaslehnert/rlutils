@@ -4,27 +4,28 @@
 # This source code is licensed under an MIT license found in the LICENSE file in the root directory of this project.
 #
 
-import numpy as np
+import random
+from typing import Dict, Any
+from ..types import Policy
 
-from .ValuePolicy import ValuePolicy
-from ..agent import ZeroValueAgent
 
-
-class UniformRandomPolicy(ValuePolicy):
+class UniformRandomPolicy(Policy):
     """
     A policy which selects actions uniformly at random.
     """
-    def __init__(self, agent):
-        self._agent = agent
+    def __init__(self, num_actions: int):
+        self._num_actions = num_actions
 
-    def _select_action(self, state, q_values):
-        return np.random.choice(range(len(q_values)))
+    def __call__(self, _: Dict[str, Any]) -> int:
+        return random.randint(0, self._num_actions - 1)
 
-def uniform_random(num_actions):
+def uniform_random(num_actions: int) -> UniformRandomPolicy:
+    """Returns a policy selecting actions uniformly at random.
+
+    Args:
+        num_actions (int): Number of actions.
+
+    Returns:
+        UniformRandomPolicy: An object that implements Policy interface.
     """
-    Returns a policy selecting actions uniformly at random.
-
-    :param num_actions:
-    :return:
-    """
-    return UniformRandomPolicy(ZeroValueAgent(num_actions))
+    return UniformRandomPolicy(num_actions)

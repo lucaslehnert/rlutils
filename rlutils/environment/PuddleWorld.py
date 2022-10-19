@@ -4,21 +4,21 @@
 # This source code is licensed under an MIT license found in the LICENSE file 
 # in the root directory of this project.
 #
-
 import numpy as np
 
+from ..types import TransitionSpec, Column
 from .TabularMDP import TabularMDP
 from .gridworld import generate_gridworld_transition_function
 from .gridworld import generate_mdp_from_transition_and_reward_function
 from .gridworld import pt_to_idx, idx_to_pt
-from typing import Dict
+from typing import Any
 
 
 class PuddleWorld(TabularMDP):
     X = 'x'
     Y = 'y'
 
-    def __init__(self, slip_prob=0.05, dtype=np.float32):
+    def __init__(self, slip_prob: float=0.05, **kvargs: Any):
         start = (0, 0)
         goal = (0, 9)
 
@@ -37,13 +37,14 @@ class PuddleWorld(TabularMDP):
             return goal_rew + puddle_penalty
 
         t_mat, r_mat = generate_mdp_from_transition_and_reward_function(
-            100, 4, t_fn, r_fn, reward_matrix=True, dtype=dtype
+            100, 4, t_fn, r_fn, reward_matrix=True
         )
         super().__init__(
             t_mat, 
             r_mat, 
             [pt_to_idx(start, (10, 10))], 
             [pt_to_idx(goal, (10, 10))], 
+            **kvargs,
             name='PuddleWorld'
         )
 
@@ -54,7 +55,20 @@ class PuddleWorld(TabularMDP):
         s[PuddleWorld.Y] = y
         return s
 
-    def state_defaults(self) -> Dict[str, np.ndarray]:
-        sd = super().state_defaults()
-        return {**sd, PuddleWorld.X: -1, PuddleWorld.Y: -1}
+    @property
+    def transition_spec(self) -> TransitionSpec:
+        transition_spec = super(PuddleWorld, self).transition_spec()
+        return TransitionSpec(
+            state_columns=[
+                Column(PuddleWorld.X, shape=(), dtype=int),
+                Column(PuddleWorld.Y, shape=(), dtype=int),
+                *transition_spec.state_columns
+            ],
+            transition_columns=transition_spec.transition_columns
+        )
+
+    # def state_defaults(self) -> Dict[str, np.ndarray]:
+    #     sd = super().state_defaults()
+    #     return {**sd, PuddleWorld.X: -1, PuddleWorld.Y: -1}
+
 

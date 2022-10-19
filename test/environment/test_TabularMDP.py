@@ -33,47 +33,29 @@ class TestPersistenceTabularMDP(unittest.TestCase):
 
         shutil.rmtree('test/mdp_dir')
 
-    def test_state_defaults(self):
+    def test_transition_spec(self):
         import rlutils as rl
         import numpy as np
 
         mdp = rl.environment.PuddleWorld()
-        state_defaults = mdp.state_defaults()
-        self.assertTrue(np.allclose(
-            state_defaults[rl.environment.PuddleWorld.ONE_HOT],
-            np.zeros(100, dtype=np.float32)
-        ))
-        self.assertTrue(np.allclose(
-            state_defaults[rl.environment.PuddleWorld.IDX],
-            np.int32(-1)
-        ))
-        self.assertTrue(np.allclose(
-            state_defaults[rl.environment.PuddleWorld.X],
-            np.float32(-1)
-        ))
-        self.assertTrue(np.allclose(
-            state_defaults[rl.environment.PuddleWorld.Y],
-            np.float32(-1)
-        ))
+        transition_spec = mdp.transition_spec
+        
+        col_names = set(col.name for col in transition_spec.state_columns)
+        correct_col_names = set([
+            rl.environment.PuddleWorld.X,
+            rl.environment.PuddleWorld.Y,
+            rl.environment.TabularMDP.IDX,
+            rl.environment.TabularMDP.ONE_HOT
+        ])
+        self.assertSetEqual(col_names, correct_col_names)
 
-    def test_transition_defaults(self):
-        import rlutils as rl
-        import numpy as np
-
-        mdp = rl.environment.PuddleWorld()
-        transition_defaults = mdp.transition_defaults()
-        self.assertTrue(np.allclose(
-            transition_defaults[rl.data.ACTION],
-            np.int32(-1)
-        ))
-        self.assertTrue(np.allclose(
-            transition_defaults[rl.data.REWARD],
-            np.float32(0.)
-        ))
-        self.assertTrue(np.allclose(
-            transition_defaults[rl.data.TERM],
-            False
-        ))
+        col_names = set(col.name for col in transition_spec.transition_columns)
+        correct_col_names = set([
+            rl.Action,
+            rl.Reward,
+            rl.Term
+        ])
+        self.assertSetEqual(col_names, correct_col_names)
 
     def test_name(self):
         import rlutils as rl
@@ -111,8 +93,8 @@ class TestPersistenceTabularMDP(unittest.TestCase):
         self.assertLessEqual(
             np.max(np.abs(np.sum(t_mat_0, axis=-1) - 1.)), 1e-5)
 
-        self.assertEqual(np.shape(t_mat)[0], mdp.num_actions())
-        self.assertEqual(np.shape(t_mat)[1], mdp.num_states())
+        self.assertEqual(np.shape(t_mat)[0], mdp.num_actions)
+        self.assertEqual(np.shape(t_mat)[1], mdp.num_states)
 
     def test_start_and_goal_states(self):
         import rlutils as rl

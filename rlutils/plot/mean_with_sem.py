@@ -5,7 +5,7 @@
 #
 
 import numpy as np
-from scipy.stats import sem
+from scipy.stats import sem # type: ignore
 
 
 def mean_with_sem(xvals, yvals, axis=0, color='C0', label=None):  # pragma: no cover

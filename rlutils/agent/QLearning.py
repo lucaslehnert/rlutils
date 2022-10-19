@@ -5,7 +5,8 @@
 #
 
 import numpy as np
-from .Agent import Agent
+from typing import Optional, Dict, Any, Union
+from ..types import Agent
 
 
 class QLearning(Agent):
@@ -13,78 +14,86 @@ class QLearning(Agent):
     Implementation of Q-learning, as described by Watkins and Dayan 1992.
     """
 
-    def __init__(self, num_states, num_actions, learning_rate, gamma=0.9, init_Q=None):
-        """
-        Q-learning agent.
+    def __init__(
+        self, 
+        state_column_name: str, 
+        num_states: int, 
+        num_actions: int, 
+        learning_rate: float, 
+        gamma: float=0.9, 
+        init_Q: Optional[Union[float, np.ndarray]]=None
+    ):
+        """Constructs a Q-learning agent.
 
-        :param num_states: Number of states. States are assumed to be represented as one-hot vectors.
-        :param num_actions: Number of actions.
-        :param learning_rate: Learning rate.
-        :param gamma: Discount factor. Default is 0.9.
-        :param init_Q: Q-value initialization. Default is None.
-            If init_Q is None, then Q-values are initialized to 1/(1 - gamma). If init_Q is a scalar, then all Q-values
-            are initialized to this scalar value. If init_Q is a np.ndarray, then it has to be of shape [num_actions,
-            num_states]. This array is then used to reset all Q-values.
+        Args:
+            state_column_name (str): State column name containing state index.
+            num_states (int): Number of states.
+            num_actions (int): Number of Actions.
+            learning_rate (float): Learning rate.
+            gamma (float, optional): Discount factor. Defaults to 0.9.
+            init_Q (Optional[np.ndarray], optional): Initial Q-values. Defaults 
+                to None.
         """
+        self._state_column_name = state_column_name
         self._num_states = num_states
         self._num_actions = num_actions
         self._lr = learning_rate
         self._gamma = gamma
         if init_Q is None:
-            self._init_Q = np.ones([self._num_actions, self._num_states]) * 1. / (1. - gamma)
+            self._init_Q = np.ones([self._num_actions, self._num_states]) 
+            self._init_Q *= 1. / (1. - gamma)
         elif type(init_Q) is np.ndarray:
             assert (np.shape(init_Q) == (self._num_actions, self._num_states))
             self._init_Q = init_Q
         else:
-            self._init_Q = np.ones([self._num_actions, self._num_states]) * init_Q
+            self._init_Q = np.ones([self._num_actions, self._num_states]) 
+            self._init_Q *= init_Q
 
         self._q = np.array(self._init_Q, copy=True)
 
-    def reset(self, q_vec=None):
-        """
-        Reset Q-learning agent.
+    def reset(self, q_vec: Optional[np.ndarray]=None):
+        """Reset Q-learning agent.
 
-        :param q_vec: Q-values used to overwrite learned Q-values. Default is None, in which case the initialization
-            provided to the constructor is used.
-        :return:
+        Args:
+            q_vec (Optional[np.ndarray], optional): Q-value table. Defaults to 
+                None.
         """
         if q_vec is None:
             self._q = np.array(self._init_Q, copy=True)
         else:
             self._q = np.array(q_vec, copy=True)
 
-    def q_values(self, state):
-        return np.matmul(self._q, state)
+    def q_values(self, state: Dict[str, Any]):
+        return self._q[:, state[self._state_column_name]]
 
-    def update_transition(self, state, action, reward, next_state, term, info):
-        """
-        Update agent with a single step transition.
-
-        :param state: State represented as a one-hot bit vector.
-        :param action: Action represented as a zero-based index.
-        :param reward: Reward given for a particular transition.
-        :param next_state: Next state represented as a one-hot bit vector.
-        :param term: Termination flag. This flag is ignored.
-        :param info: Other transition info. This dictionary is ignored.
-        :return: A dictionary {'td_error': td_error}, where td_error is the temporal difference error induced by the
-            given transition.
-        """
-        target = reward + (1. - term) * self._gamma * np.max(np.matmul(self._q, next_state))
-        td_error = target - np.dot(self._q[action], state)
-        self._q[action] = self._q[action] + self._lr * td_error * state
-        return {'td_error': td_error}
+    def update_transition(
+        self, 
+        state: Dict[str, Any], 
+        action: int, 
+        reward: float, 
+        next_state: Dict[str, Any], 
+        term: bool, 
+        info: Dict[Any, Any]
+    ): # pragma: no cover
+        state_idx = state[self._state_column_name]
+        next_q_vals = self._q[:, next_state[self._state_column_name]]
+        target = reward + (1. - term) * self._gamma * np.max(next_q_vals)
+        td_error = target - self._q[action, state_idx]
+        self._q[action, state_idx] += self._lr * td_error
 
     def on_simulation_timeout(self):
         pass
 
-    def get_q_vector(self):
+    @property
+    def q_vector(self) -> np.ndarray:
         """
 
         :return: Array of shape [num_actions, num_states] containing all Q-values.
         """
-        return np.array(self._q)
+        return np.copy(self._q)
 
-    def get_gamma(self):
+    @property
+    def gamma(self) -> float:
         """Discount factor getter
 
         :return: Discount factor gamma.
@@ -92,7 +101,8 @@ class QLearning(Agent):
         """
         return self._gamma
 
-    def get_learning_rate(self):
+    @property
+    def learning_rate(self) -> float:
         """
 
         :return: Learning rate.

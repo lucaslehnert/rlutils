@@ -5,16 +5,16 @@
 #
 
 from abc import abstractmethod
-
+from typing import Union
 
 class VariableSchedule(object):
     """
-    Abstract super class for a schedule for a single scalar number. These schedules map a time step integer
-    t = 0,1,2,... to some scalar value.
+    Abstract super class for a schedule for a single scalar number. These 
+    schedules map a time step integer t = 0,1,2,... to some scalar value.
     """
 
     @abstractmethod
-    def __call__(self, t):  # pragma: no cover
+    def __call__(self, t: int) -> Union[int, float, bool]:  # pragma: no cover
         """
         Return the variable value for the given time index value.
 
