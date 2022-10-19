@@ -43,4 +43,4 @@ jobs:
         mypy rlutils/**/*.py
     - name: Test with pytest
       run: |
-        pytest
+        python -m pytest test

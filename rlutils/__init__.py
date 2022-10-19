@@ -36,4 +36,4 @@ __all__ = [
     "TransitionListener",
     "transition_listener"
 ]
-__version__ = '0.0.2'
+__version__ = '0.0.3'
