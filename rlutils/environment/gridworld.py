@@ -72,10 +72,10 @@ def pt_to_idx(pt: Tuple[int, int], shape: Tuple[int, int]) -> int:
 
 
 class GridWorldAction:
-    UP = 0
-    RIGHT = 1
-    DOWN = 2
-    LEFT = 3
+    up = 0
+    right = 1
+    down = 2
+    left = 3
 
 
 def generate_gridworld_transition_function(
@@ -101,16 +101,16 @@ def generate_gridworld_transition_function(
 
         x_next: int = 0
         y_next: int = 0
-        if a == GridWorldAction.UP:
+        if a == GridWorldAction.up:
             x_next = x
             y_next = max(y - 1, 0)
-        elif a == GridWorldAction.RIGHT:
+        elif a == GridWorldAction.right:
             x_next = min(x + 1, size_x - 1)
             y_next = y
-        elif a == GridWorldAction.DOWN:
+        elif a == GridWorldAction.down:
             x_next = x
             y_next = min(y + 1, size_y - 1)
-        elif a == GridWorldAction.LEFT:
+        elif a == GridWorldAction.left:
             x_next = max(x - 1, 0)
             y_next = y
         s_next_pred = pt_to_idx((x_next, y_next), (size_x, size_y))

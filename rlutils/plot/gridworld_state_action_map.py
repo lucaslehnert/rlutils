@@ -16,10 +16,10 @@ from .utils import get_shape_up, get_shape_right, get_shape_down, get_shape_left
 
 def _get_arrow_shapes(x, y, q_vals, color_map):  # pragma: no cover
     return [
-        get_shape_up(x, y, color_map(q_vals[rl.environment.gridworld.GridWorldAction.UP])),
-        get_shape_right(x, y, color_map(q_vals[rl.environment.gridworld.GridWorldAction.RIGHT])),
-        get_shape_down(x, y, color_map(q_vals[rl.environment.gridworld.GridWorldAction.DOWN])),
-        get_shape_left(x, y, color_map(q_vals[rl.environment.gridworld.GridWorldAction.LEFT]))
+        get_shape_up(x, y, color_map(q_vals[rl.environment.gridworld.GridWorldAction.up])),
+        get_shape_right(x, y, color_map(q_vals[rl.environment.gridworld.GridWorldAction.right])),
+        get_shape_down(x, y, color_map(q_vals[rl.environment.gridworld.GridWorldAction.down])),
+        get_shape_left(x, y, color_map(q_vals[rl.environment.gridworld.GridWorldAction.left]))
     ]
 
 

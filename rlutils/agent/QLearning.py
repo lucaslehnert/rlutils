@@ -5,7 +5,7 @@
 #
 
 import numpy as np
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, Union
 from .Agent import Agent
 
 
@@ -21,7 +21,7 @@ class QLearning(Agent):
         num_actions: int, 
         learning_rate: float, 
         gamma: float=0.9, 
-        init_Q: Optional[np.ndarray]=None
+        init_Q: Optional[Union[float, np.ndarray]]=None
     ):
         """Constructs a Q-learning agent.
 
@@ -78,21 +78,22 @@ class QLearning(Agent):
         state_idx = state[self._state_column_name]
         next_q_vals = self._q[:, next_state[self._state_column_name]]
         target = reward + (1. - term) * self._gamma * np.max(next_q_vals)
-        td_error = target - self._q[:, state_idx]
+        td_error = target - self._q[action, state_idx]
         self._q[action, state_idx] += self._lr * td_error
-        return {'td_error': td_error}
 
     def on_simulation_timeout(self):
         pass
 
-    def get_q_vector(self) -> np.ndarray:
+    @property
+    def q_vector(self) -> np.ndarray:
         """
 
         :return: Array of shape [num_actions, num_states] containing all Q-values.
         """
         return np.copy(self._q)
 
-    def get_gamma(self) -> float:
+    @property
+    def gamma(self) -> float:
         """Discount factor getter
 
         :return: Discount factor gamma.
@@ -100,7 +101,8 @@ class QLearning(Agent):
         """
         return self._gamma
 
-    def get_learning_rate(self) -> float:
+    @property
+    def learning_rate(self) -> float:
         """
 
         :return: Learning rate.

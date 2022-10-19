@@ -39,28 +39,32 @@ class TestVIAgent(TestCase):
     def test_reset(self):
         import rlutils as rl
         import numpy as np
-        t_mat, r_vec, q_corr, v_corr, gamma = self._get_test_mdp()
-        agent = rl.agent.VIAgent(t_mat, r_vec, gamma, eps=1e-5)
-        q_vec = np.stack([agent.q_values(rl.one_hot(i, 3)) for i in range(3)]).transpose()
+
+        t_mat, r_vec, q_corr, _, gamma = self._get_test_mdp()
+        agent = rl.agent.VIAgent(t_mat, r_vec, gamma, "oh", eps=1e-5)
+        states = [{"oh": rl.one_hot(i, 3)} for i in range(3)]
+        q_vec = np.stack([agent.q_values(s) for s in states]).transpose()
         agent.update_transition(None, None, None, None, None, None)
         self.assertLessEqual(np.max(np.abs(q_vec - q_corr)), 1e-4)
         agent.reset()
-        q_vec = np.stack([agent.q_values(rl.one_hot(i, 3)) for i in range(3)]).transpose()
+        q_vec = np.stack([agent.q_values(s) for s in states]).transpose()
         self.assertLessEqual(np.max(np.abs(q_vec - q_corr)), 1e-4)
 
     def test_q_values(self):
         import rlutils as rl
         import numpy as np
         t_mat, r_vec, q_corr, v_corr, gamma = self._get_test_mdp()
-        agent = rl.agent.VIAgent(t_mat, r_vec, gamma, eps=1e-5)
-        q_vec = np.stack([agent.q_values(rl.one_hot(i, 3)) for i in range(3)]).transpose()
+        agent = rl.agent.VIAgent(t_mat, r_vec, gamma, "oh", eps=1e-5)
+        states = [{"oh": rl.one_hot(i, 3)} for i in range(3)]
+        q_vec = np.stack([agent.q_values(s) for s in states]).transpose()
         self.assertLessEqual(np.max(np.abs(q_vec - q_corr)), 1e-4)
 
     def test_update_transition(self):
         import rlutils as rl
         import numpy as np
         t_mat, r_vec, q_corr, v_corr, gamma = self._get_test_mdp()
-        agent = rl.agent.VIAgent(t_mat, r_vec, gamma, eps=1e-5)
+        agent = rl.agent.VIAgent(t_mat, r_vec, gamma, "oh", eps=1e-5)
         agent.update_transition(None, None, None, None, None, None)
-        q_vec = np.stack([agent.q_values(rl.one_hot(i, 3)) for i in range(3)]).transpose()
+        states = [{"oh": rl.one_hot(i, 3)} for i in range(3)]
+        q_vec = np.stack([agent.q_values(s) for s in states]).transpose()
         self.assertLessEqual(np.max(np.abs(q_vec - q_corr)), 1e-4)

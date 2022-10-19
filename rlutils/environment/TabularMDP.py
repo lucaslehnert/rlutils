@@ -11,7 +11,7 @@ from typing import List, Tuple
 from rlutils.utils import one_hot
 from .gridworld import add_terminal_states
 from .Task import Task
-from ..data import TransitionSpec, Column, ActionIndexColumn, RewardColumn, TermColumn
+from ..data import TransitionSpec, Column, action_index_column, reward_column, term_column
 
 
 class TabularMDP(Task):
@@ -58,7 +58,7 @@ class TabularMDP(Task):
                 ),
                 Column(TabularMDP.IDX, shape=(), dtype=float)
             ],
-            transition_columns=[ActionIndexColumn, RewardColumn, TermColumn]
+            transition_columns=[action_index_column, reward_column, term_column]
         )
 
     # def state_defaults(self) -> Dict[str, np.ndarray]:

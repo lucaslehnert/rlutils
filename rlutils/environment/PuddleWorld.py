@@ -54,15 +54,16 @@ class PuddleWorld(TabularMDP):
         s[PuddleWorld.Y] = y
         return s
 
+    @property
     def transition_spec(self) -> TransitionSpec:
-        tab_spec = super().transition_spec
+        transition_spec = super(PuddleWorld, self).transition_spec()
         return TransitionSpec(
             state_columns=[
                 Column(PuddleWorld.X, shape=(), dtype=int),
                 Column(PuddleWorld.Y, shape=(), dtype=int),
-                *tab_spec.state_columns
+                *transition_spec.state_columns
             ],
-            transition_columns=tab_spec.transition_columns
+            transition_columns=transition_spec.transition_columns
         )
 
     # def state_defaults(self) -> Dict[str, np.ndarray]:

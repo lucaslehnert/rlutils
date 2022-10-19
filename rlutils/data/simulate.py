@@ -44,7 +44,7 @@ class TransitionListener:
 
 
 class _TransitionListenerAggregator(TransitionListener):
-    def __init__(self, *update_listener_list: TransitionListener...):
+    def __init__(self, *update_listener_list: TransitionListener):
         self._update_listener_list = tuple(update_listener_list)
 
     def update_transition(self, *params, **kvargs):
@@ -56,7 +56,7 @@ class _TransitionListenerAggregator(TransitionListener):
             l.on_simulation_timeout()
 
 
-def transition_listener(*update_listener_list: TransitionListener...):
+def transition_listener(*update_listener_list: TransitionListener):
     return _TransitionListenerAggregator(*update_listener_list)
 
 

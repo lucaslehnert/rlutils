@@ -11,6 +11,7 @@ class TestGridworld(TestCase):
     def test_generate_mdp_from_transition_and_reward_function(self):
         import rlutils as rl
         import numpy as np
+        from rlutils.environment.gridworld import generate_mdp_from_transition_and_reward_function
 
         def t_fn(s, a, sn):
             if a == 0 and s == 0 and sn == 1:
@@ -52,24 +53,22 @@ class TestGridworld(TestCase):
         ], dtype=np.float32)
         r_vec_corr = np.sum(t_mat_corr * r_mat_corr, axis=-1)
 
-        t_mat, r_mat = rl.environment.gridworld.generate_mdp_from_transition_and_reward_function(
+        t_mat, r_mat = generate_mdp_from_transition_and_reward_function(
             num_states=2,
             num_actions=2,
             transition_fn=t_fn,
             reward_fn=r_fn,
-            reward_matrix=True,
-            dtype=np.float64
+            reward_matrix=True
         )
         self.assertTrue(np.allclose(t_mat, t_mat_corr))
         self.assertTrue(np.allclose(r_mat, r_mat_corr))
 
-        t_mat, r_vec = rl.environment.gridworld.generate_mdp_from_transition_and_reward_function(
+        t_mat, r_vec = generate_mdp_from_transition_and_reward_function(
             num_states=2,
             num_actions=2,
             transition_fn=t_fn,
             reward_fn=r_fn,
-            reward_matrix=False,
-            dtype=np.float64
+            reward_matrix=False
         )
         self.assertTrue(np.allclose(t_mat, t_mat_corr))
         self.assertTrue(np.allclose(r_vec, r_vec_corr))
@@ -80,11 +79,13 @@ class TestGridworld(TestCase):
         import numpy as np
 
         t_mat_corr = np.stack([np.eye(2)] * 4)
-        t_fn = generate_gridworld_transition_function_with_barrier(2, 1, slip_prob=0., barrier_idx_list=[(0, 1)])
+        t_fn = generate_gridworld_transition_function_with_barrier(
+            2, 1, slip_prob=0., barrier_idx_list=[(0, 1)])
         t_mat = generate_transition_matrix_from_function(2, 4, t_fn)
         self.assertTrue(np.allclose(t_mat, t_mat_corr))
 
-        t_fn = generate_gridworld_transition_function_with_barrier(1, 2, slip_prob=0., barrier_idx_list=[(0, 1)])
+        t_fn = generate_gridworld_transition_function_with_barrier(
+            1, 2, slip_prob=0., barrier_idx_list=[(0, 1)])
         t_mat = generate_transition_matrix_from_function(2, 4, t_fn)
         self.assertTrue(np.allclose(t_mat, t_mat_corr))
 

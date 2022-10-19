@@ -15,18 +15,18 @@ class TestLoggerEpisodeLength(TestCase):
         for _ in range(5):
             mdp = rl.environment.PuddleWorld(slip_prob=0.)
             policy = rl.policy.ActionSequencePolicy([
-                rl.environment.gridworld.GridWorldAction.DOWN,
-                rl.environment.gridworld.GridWorldAction.RIGHT,
-                rl.environment.gridworld.GridWorldAction.DOWN,
-                rl.environment.gridworld.GridWorldAction.DOWN,
-                rl.environment.gridworld.GridWorldAction.DOWN,
-                rl.environment.gridworld.GridWorldAction.DOWN,
-                rl.environment.gridworld.GridWorldAction.DOWN,
-                rl.environment.gridworld.GridWorldAction.DOWN,
-                rl.environment.gridworld.GridWorldAction.DOWN,
-                rl.environment.gridworld.GridWorldAction.DOWN,
-                rl.environment.gridworld.GridWorldAction.DOWN,
-                rl.environment.gridworld.GridWorldAction.LEFT
+                rl.environment.gridworld.GridWorldAction.down,
+                rl.environment.gridworld.GridWorldAction.right,
+                rl.environment.gridworld.GridWorldAction.down,
+                rl.environment.gridworld.GridWorldAction.down,
+                rl.environment.gridworld.GridWorldAction.down,
+                rl.environment.gridworld.GridWorldAction.down,
+                rl.environment.gridworld.GridWorldAction.down,
+                rl.environment.gridworld.GridWorldAction.down,
+                rl.environment.gridworld.GridWorldAction.down,
+                rl.environment.gridworld.GridWorldAction.down,
+                rl.environment.gridworld.GridWorldAction.down,
+                rl.environment.gridworld.GridWorldAction.left
             ])
             rl.data.simulate(mdp, policy, logger)
         self.assertTrue(np.all(logger.get_episode_length() == np.ones(5) * 12))
@@ -38,16 +38,16 @@ class TestLoggerEpisodeLength(TestCase):
         for _ in range(5):
             mdp = rl.environment.PuddleWorld(slip_prob=0.)
             policy = rl.policy.ActionSequencePolicy([
-                rl.environment.gridworld.GridWorldAction.DOWN,
-                rl.environment.gridworld.GridWorldAction.RIGHT,
-                rl.environment.gridworld.GridWorldAction.DOWN,
-                rl.environment.gridworld.GridWorldAction.DOWN,
-                rl.environment.gridworld.GridWorldAction.DOWN,
-                rl.environment.gridworld.GridWorldAction.DOWN,
-                rl.environment.gridworld.GridWorldAction.DOWN,
-                rl.environment.gridworld.GridWorldAction.DOWN,
-                rl.environment.gridworld.GridWorldAction.DOWN,
-                rl.environment.gridworld.GridWorldAction.DOWN
+                rl.environment.gridworld.GridWorldAction.down,
+                rl.environment.gridworld.GridWorldAction.right,
+                rl.environment.gridworld.GridWorldAction.down,
+                rl.environment.gridworld.GridWorldAction.down,
+                rl.environment.gridworld.GridWorldAction.down,
+                rl.environment.gridworld.GridWorldAction.down,
+                rl.environment.gridworld.GridWorldAction.down,
+                rl.environment.gridworld.GridWorldAction.down,
+                rl.environment.gridworld.GridWorldAction.down,
+                rl.environment.gridworld.GridWorldAction.down
             ])
             try:
                 rl.data.simulate(mdp, policy, logger, max_steps=10)
@@ -62,16 +62,16 @@ class TestLoggerEpisodeLength(TestCase):
         for _ in range(5):
             mdp = rl.environment.PuddleWorld(slip_prob=0.)
             policy = rl.policy.ActionSequencePolicy([
-                rl.environment.gridworld.GridWorldAction.DOWN,
-                rl.environment.gridworld.GridWorldAction.RIGHT,
-                rl.environment.gridworld.GridWorldAction.DOWN,
-                rl.environment.gridworld.GridWorldAction.DOWN,
-                rl.environment.gridworld.GridWorldAction.DOWN,
-                rl.environment.gridworld.GridWorldAction.DOWN,
-                rl.environment.gridworld.GridWorldAction.DOWN,
-                rl.environment.gridworld.GridWorldAction.DOWN,
-                rl.environment.gridworld.GridWorldAction.DOWN,
-                rl.environment.gridworld.GridWorldAction.DOWN
+                rl.environment.gridworld.GridWorldAction.down,
+                rl.environment.gridworld.GridWorldAction.right,
+                rl.environment.gridworld.GridWorldAction.down,
+                rl.environment.gridworld.GridWorldAction.down,
+                rl.environment.gridworld.GridWorldAction.down,
+                rl.environment.gridworld.GridWorldAction.down,
+                rl.environment.gridworld.GridWorldAction.down,
+                rl.environment.gridworld.GridWorldAction.down,
+                rl.environment.gridworld.GridWorldAction.down,
+                rl.environment.gridworld.GridWorldAction.down
             ])
             try:
                 rl.data.simulate(mdp, policy, logger, max_steps=10)

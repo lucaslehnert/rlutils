@@ -13,13 +13,13 @@ from .utils import get_shape_up, get_shape_right, get_shape_down, get_shape_left
 
 
 def _get_action_arrow(x, y, action):  # pragma: no cover
-    if action == rl.environment.gridworld.GridWorldAction.UP:
+    if action == rl.environment.gridworld.GridWorldAction.up:
         return get_shape_up(x, y, 'black')
-    elif action == rl.environment.gridworld.GridWorldAction.RIGHT:
+    elif action == rl.environment.gridworld.GridWorldAction.right:
         return get_shape_right(x, y, 'black')
-    elif action == rl.environment.gridworld.GridWorldAction.DOWN:
+    elif action == rl.environment.gridworld.GridWorldAction.down:
         return get_shape_down(x, y, 'black')
-    elif action == rl.environment.gridworld.GridWorldAction.LEFT:
+    elif action == rl.environment.gridworld.GridWorldAction.left:
         return get_shape_left(x, y, 'black')
 
 

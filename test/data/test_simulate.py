@@ -4,10 +4,6 @@
 # This source code is licensed under an MIT license found in the LICENSE file in the root directory of this project.
 #
 
-from rlutils.environment.TabularMDP import TabularMDP
-from rlutils.data.replaybuffer import Reward, Term
-from rlutils.environment.PuddleWorld import PuddleWorld
-from rlutils import data, environment
 from unittest import TestCase
 
 
@@ -19,16 +15,16 @@ class TestSimulate(TestCase):
         for _ in range(5):
             mdp = rl.environment.PuddleWorld(slip_prob=0.)
             policy = rl.policy.ActionSequencePolicy([
-                rl.environment.gridworld.GridWorldAction.DOWN,
-                rl.environment.gridworld.GridWorldAction.RIGHT,
-                rl.environment.gridworld.GridWorldAction.DOWN,
-                rl.environment.gridworld.GridWorldAction.DOWN,
-                rl.environment.gridworld.GridWorldAction.DOWN,
-                rl.environment.gridworld.GridWorldAction.DOWN,
-                rl.environment.gridworld.GridWorldAction.DOWN,
-                rl.environment.gridworld.GridWorldAction.DOWN,
-                rl.environment.gridworld.GridWorldAction.DOWN,
-                rl.environment.gridworld.GridWorldAction.DOWN
+                rl.environment.gridworld.GridWorldAction.down,
+                rl.environment.gridworld.GridWorldAction.right,
+                rl.environment.gridworld.GridWorldAction.down,
+                rl.environment.gridworld.GridWorldAction.down,
+                rl.environment.gridworld.GridWorldAction.down,
+                rl.environment.gridworld.GridWorldAction.down,
+                rl.environment.gridworld.GridWorldAction.down,
+                rl.environment.gridworld.GridWorldAction.down,
+                rl.environment.gridworld.GridWorldAction.down,
+                rl.environment.gridworld.GridWorldAction.down
             ])
             rl.data.simulate(mdp, policy, logger, max_steps=10)
         self.assertTrue(np.all(logger.get_episode_length() == np.ones(5) * 10))
@@ -48,50 +44,38 @@ class TestSimulate(TestCase):
 
 
         mdp = rl.environment.PuddleWorld(slip_prob=0.)
-        zero_vec = np.zeros(100, dtype=np.float32)
-        buffer = rl.data.TrajectoryBuffer(
-            state_defaults={
-                rl.environment.TabularMDP.ONE_HOT: zero_vec,
-                rl.environment.PuddleWorld.X: np.int32(0),
-                rl.environment.PuddleWorld.Y: np.int32(0)
-            },
-            transition_defaults={
-                rl.data.Action: np.int32(0),
-                rl.data.Reward: np.float32(0.),
-                rl.data.Term: False
-            }
-        )
+        buffer = rl.data.TrajectoryBuffer(mdp.transition_spec)
         logger = rl.logging.LoggerTrajectory(buffer)
 
         mdp = rl.environment.PuddleWorld(slip_prob=0.)
         action_seq = [
-            rl.environment.gridworld.GridWorldAction.DOWN,
-            rl.environment.gridworld.GridWorldAction.RIGHT,
-            rl.environment.gridworld.GridWorldAction.DOWN,
-            rl.environment.gridworld.GridWorldAction.DOWN,
-            rl.environment.gridworld.GridWorldAction.DOWN,
-            rl.environment.gridworld.GridWorldAction.DOWN,
-            rl.environment.gridworld.GridWorldAction.DOWN,
-            rl.environment.gridworld.GridWorldAction.DOWN,
-            rl.environment.gridworld.GridWorldAction.DOWN,
-            rl.environment.gridworld.GridWorldAction.DOWN,
-            rl.environment.gridworld.GridWorldAction.DOWN,
-            rl.environment.gridworld.GridWorldAction.LEFT
+            rl.environment.gridworld.GridWorldAction.down,
+            rl.environment.gridworld.GridWorldAction.right,
+            rl.environment.gridworld.GridWorldAction.down,
+            rl.environment.gridworld.GridWorldAction.down,
+            rl.environment.gridworld.GridWorldAction.down,
+            rl.environment.gridworld.GridWorldAction.down,
+            rl.environment.gridworld.GridWorldAction.down,
+            rl.environment.gridworld.GridWorldAction.down,
+            rl.environment.gridworld.GridWorldAction.down,
+            rl.environment.gridworld.GridWorldAction.down,
+            rl.environment.gridworld.GridWorldAction.down,
+            rl.environment.gridworld.GridWorldAction.left
         ]
         policy = rl.policy.ActionSequencePolicy(action_seq)
         rl.data.simulate(mdp, policy, logger)
 
-        self.assertEqual(buffer.num_transitions(), 12)
-        self.assertEqual(buffer.num_states(), 13)
+        self.assertEqual(buffer.num_transitions, 12)
+        self.assertEqual(buffer.num_states, 13)
         
-        r_seq = buffer.get_column(rl.data.Reward)
+        r_seq = buffer.get_transition_column(rl.data.Reward)
         r_seq_corr = np.array(
             [0.,  0., -1., -1., -1., -1., -1., -1., -1.,  0.,  0.,  1.], 
             dtype=np.float32
         )
         self.assertTrue(np.all(r_seq == r_seq_corr))
 
-        a_seq = buffer.get_column(rl.data.Action)
+        a_seq = buffer.get_transition_column(rl.data.Action)
         self.assertTrue(np.all(a_seq == np.array(action_seq, dtype=np.int32)))
 
         x_seq = buffer.get_state_column(rl.environment.PuddleWorld.X)
@@ -120,25 +104,13 @@ class TestSimulate(TestCase):
         import numpy as np
 
         mdp = rl.environment.PuddleWorld(slip_prob=0.)
-        zero_vec = np.zeros(100, dtype=np.float32)
-        buffer = rl.data.TrajectoryBuffer(
-            state_defaults={
-                rl.environment.TabularMDP.ONE_HOT: zero_vec,
-                rl.environment.PuddleWorld.X: np.int32(0),
-                rl.environment.PuddleWorld.Y: np.int32(0)
-            },
-            transition_defaults={
-                rl.data.Action: np.int32(0),
-                rl.data.Reward: np.float32(0.),
-                rl.data.Term: False
-            }
-        )
+        buffer = rl.data.TrajectoryBuffer(mdp.transition_spec)
         logger = rl.logging.LoggerTrajectory(buffer)
 
         mdp = rl.environment.PuddleWorld(slip_prob=0.)
         policy = rl.policy.ActionSequencePolicy(
-            [rl.environment.gridworld.GridWorldAction.UP] * 101
+            [rl.environment.gridworld.GridWorldAction.up] * 101
         )
         rl.data.simulate(mdp, policy, logger, max_steps=100)
-        self.assertEqual(buffer.num_transitions(), 100)
-        self.assertEqual(buffer.num_states(), 101)
+        self.assertEqual(buffer.num_transitions, 100)
+        self.assertEqual(buffer.num_states, 101)

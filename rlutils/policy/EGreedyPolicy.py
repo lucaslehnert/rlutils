@@ -7,7 +7,7 @@
 import numpy as np
 from typing import Dict, Any
 from .ValuePolicy import ValuePolicy
-from ..agent.Agent import Agent
+from ..agent import Agent
 
 
 class EGreedyPolicy(ValuePolicy):

@@ -5,24 +5,11 @@
 #
 
 from .data import Action, Reward, Term
-from .data import Column, ActionIndexColumn, RewardColumn, TermColumn
+from .data import Column, action_index_column, reward_column, term_column
 from .data import TransitionSpec
 
-from .simulate import simulate
-from .simulate import transition_listener
-from .simulate import TransitionListener
-
-from .replaybuffer import ReplayBuffer
-from .replaybuffer import ReplayBufferException
-from .replaybuffer import TrajectoryBuffer
-from .replaybuffer import TrajectoryBufferFixedSize
-from .replaybuffer import TransitionIteratorEpochs
-from .replaybuffer import TransitionIteratorSampled
-from .replaybuffer import StateIteratorEpochs
-from .replaybuffer import StateIteratorSampled
-from .replaybuffer import Action
-from .replaybuffer import Reward
-from .replaybuffer import Term
+from .simulate import simulate, transition_listener, TransitionListener
+from .replay import Trajectory, TrajectoryBuffer, TrajectoryBufferFixedSize
 
 
 __all__ = [
@@ -30,20 +17,14 @@ __all__ = [
     "Reward",
     "Term",
     "Column",
-    "ActionIndexColumn",
-    "RewardColumn",
-    "TermColumn",
+    "action_index_column",
+    "reward_column",
+    "term_column",
     "TransitionSpec",
     "simulate",
-    "replay_trajectory",
     "transition_listener",
     "TransitionListener",
-    "ReplayBuffer",
-    "ReplayBufferException",
+    "Trajectory",
     "TrajectoryBuffer",
     "TrajectoryBufferFixedSize",
-    "TransitionIteratorEpochs",
-    "TransitionIteratorSampled",
-    "StateIteratorEpochs",
-    "StateIteratorSampled"
 ]
