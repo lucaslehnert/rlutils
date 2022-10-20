@@ -4,9 +4,9 @@ from collections import namedtuple
 import numpy as np
 
 
-Action = b"action"
-Reward = b"reward"
-Term = b"term"
+Action = "action"
+Reward = "reward"
+Term = "term"
 
 Column = namedtuple("Column", ["name", "shape", "dtype"])
 
