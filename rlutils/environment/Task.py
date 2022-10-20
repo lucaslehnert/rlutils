@@ -14,15 +14,14 @@ class Task(gym.Env):
             TransitionConfig: Transition specification for a task. 
         """
         pass
-    
+
     @abstractmethod
     def step(
         self,
         action: Any
     ) -> Tuple[Dict[str, Any], Any, bool, bool, dict]:
         pass
-    
+
     @abstractmethod
     def reset(self, *args: Any, **kvargs: Any) -> Tuple[Dict[str, Any], dict]:
         pass
-
